@@ -1,4 +1,4 @@
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';

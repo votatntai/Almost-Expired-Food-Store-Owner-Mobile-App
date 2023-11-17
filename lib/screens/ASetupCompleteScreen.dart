@@ -1,6 +1,6 @@
-import 'package:appetit/screens/ADashboardScreen.dart';
+import 'package:appetit/screens/DashboardScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:appetit/main.dart';
 
@@ -65,7 +65,7 @@ class ASetupCompleteScreen extends StatelessWidget {
                       ),
                     ),
                     FloatingActionButton(
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ADashboardScreen())),
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen())),
                       child: Icon(Icons.arrow_forward_ios_outlined),
                       backgroundColor: appetitBrownColor,
                     ),

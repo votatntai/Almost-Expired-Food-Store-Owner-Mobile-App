@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'AWalkThroughScreen.dart';
 
-class ASplashScreen extends StatefulWidget {
-  const ASplashScreen({Key? key}) : super(key: key);
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  _ASplashScreenState createState() => _ASplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _ASplashScreenState extends State<ASplashScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();

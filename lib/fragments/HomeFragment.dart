@@ -1,5 +1,5 @@
 import 'package:appetit/components/APopularRecipesComponent.dart';
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/main.dart';
 import 'package:appetit/screens/ACategoryListScreen.dart';
 import 'package:appetit/screens/ALiveCookingListScreen.dart';
@@ -10,14 +10,14 @@ import 'package:nb_utils/nb_utils.dart';
 import '../utils/ADataProvider.dart';
 import '../screens/ALiveCookingRecipeScreen.dart';
 
-class AHomeFragment extends StatefulWidget {
-  const AHomeFragment({Key? key}) : super(key: key);
+class HomeFragment extends StatefulWidget {
+  const HomeFragment({Key? key}) : super(key: key);
 
   @override
-  State<AHomeFragment> createState() => _AHomeFragmentState();
+  State<HomeFragment> createState() => _HomeFragmentState();
 }
 
-class _AHomeFragmentState extends State<AHomeFragment> {
+class _HomeFragmentState extends State<HomeFragment> {
   var bookmarkSelection = true;
 
   @override

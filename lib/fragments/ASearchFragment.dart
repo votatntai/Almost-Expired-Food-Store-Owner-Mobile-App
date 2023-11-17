@@ -5,7 +5,7 @@ import 'package:appetit/components/ASearchTopChefComponent.dart';
 import 'package:appetit/utils/ADataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/main.dart';
 
 class ASearchFragment extends StatefulWidget {

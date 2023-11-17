@@ -1,4 +1,4 @@
-import 'package:appetit/screens/AWelcomeScreen.dart';
+import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:appetit/utils/ADataProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +125,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                       if (initialValue < 2) {
                         setState(() => pageController.jumpToPage(initialValue + 1));
                       } else {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AWelcomeScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
                       }
                     },
                     child: Icon(Icons.arrow_forward_ios_outlined, color: Colors.white),

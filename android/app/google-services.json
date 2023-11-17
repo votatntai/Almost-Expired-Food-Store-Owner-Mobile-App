@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "637102657592",
+    "project_id": "almost-expired-food-887dd",
+    "storage_bucket": "almost-expired-food-887dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637102657592:android:8b072976405ba364d696cd",
+        "android_client_info": {
+          "package_name": "com.prokit.almost_expired_food_customer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637102657592-88n7f3bremc1ddil7k33ghjccu4sujlf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prokit.almost_expired_food_customer_app",
+            "certificate_hash": "a9ed7fdc304df804ee63add2cbb664fdd9f8edaa"
+          }
+        },
+        {
+          "client_id": "637102657592-nunt7n4dhgu0vh1i8b3sl8g9gjj828te.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prokit.almost_expired_food_customer_app",
+            "certificate_hash": "6c6df40e98c89886dbd69e7cd18407b60941d67e"
+          }
+        },
+        {
+          "client_id": "637102657592-tsj3k73p0l6cfqknbcfepte94c4de812.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBatn_mKDMswhr6AoZwJkBu-VRVr5OezEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637102657592-tsj3k73p0l6cfqknbcfepte94c4de812.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637102657592-an3njvcbp8s6o6i0d9ophlkf61b82pqe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appetit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637102657592:android:90f82fc446ab5f66d696cd",
+        "android_client_info": {
+          "package_name": "com.prokit.almost_expired_food_store_owner_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637102657592-7ra3p7stn1v2ikte41nin9vmebus3n4m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prokit.almost_expired_food_store_owner_app",
+            "certificate_hash": "a9ed7fdc304df804ee63add2cbb664fdd9f8edaa"
+          }
+        },
+        {
+          "client_id": "637102657592-tsj3k73p0l6cfqknbcfepte94c4de812.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBatn_mKDMswhr6AoZwJkBu-VRVr5OezEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637102657592-tsj3k73p0l6cfqknbcfepte94c4de812.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637102657592-an3njvcbp8s6o6i0d9ophlkf61b82pqe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appetit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

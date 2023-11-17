@@ -1,19 +1,20 @@
 import 'package:appetit/screens/AForgetPasswordScreen.dart';
 import 'package:appetit/screens/ARegisterScreen.dart';
-import 'package:appetit/screens/ADashboardScreen.dart';
+import 'package:appetit/screens/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/main.dart';
 
-class ALoginScreen extends StatefulWidget {
-  const ALoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  static const routeName = '/login';
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _ALoginScreenState createState() => _ALoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _ALoginScreenState extends State<ALoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   var viewPassword = true;
 
   GlobalKey<FormState> mykey = new GlobalKey<FormState>();
@@ -131,7 +132,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
               child: ElevatedButton(
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ADashboardScreen()),
+                  MaterialPageRoute(builder: (context) => DashboardScreen()),
                 ),
                 child: Text('Login', style: TextStyle(fontSize: 18)),
                 style:

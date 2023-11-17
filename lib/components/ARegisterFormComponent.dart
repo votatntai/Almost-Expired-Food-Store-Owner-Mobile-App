@@ -1,5 +1,5 @@
-import 'package:appetit/screens/ADashboardScreen.dart';
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/screens/DashboardScreen.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:appetit/main.dart';
@@ -115,7 +115,7 @@ class _MyFormState extends State<MyForm> {
             child: ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully Registered')));
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ADashboardScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
               },
               child: Text('Register', style: TextStyle(fontSize: 18)),
               style: ElevatedButton.styleFrom(primary: Color(0xFFF2894F), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),

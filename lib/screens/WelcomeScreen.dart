@@ -1,18 +1,24 @@
-import 'package:appetit/screens/ALoginScreen.dart';
+import 'package:appetit/cubits/login/login_cubit.dart';
+import 'package:appetit/cubits/login/login_state.dart';
+import 'package:appetit/screens/LoginScreen.dart';
 import 'package:appetit/screens/ARegisterScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:appetit/utils/AColors.dart';
+import 'package:appetit/utils/Colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:appetit/main.dart';
 
-class AWelcomeScreen extends StatefulWidget {
-  const AWelcomeScreen({Key? key}) : super(key: key);
+import '../utils/messages.dart';
+import 'DashboardScreen.dart';
+
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
-  _AWelcomeScreenState createState() => _AWelcomeScreenState();
+  _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _AWelcomeScreenState extends State<AWelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void dispose() {
     super.dispose();
@@ -113,16 +119,42 @@ class _AWelcomeScreenState extends State<AWelcomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          primary: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                        ),
-                        child: Image.asset('image/appetit/google.png', width: 70, height: 70),
-                      ),
+                    child: BlocProvider<LoginByGoogleCubit>(
+                      create: (context) => LoginByGoogleCubit(),
+                      child: BlocConsumer<LoginByGoogleCubit, LoginByGoogleState>(listener: (context, state) {
+                        if (state is LoginByGooglelSuccessState) {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+                          return;
+                        } else if (state is LoginByGooglelFailedState) {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: const Text(msg_login_by_google_failed_title),
+                                    content: const Text(msg_login_by_google_failed_content),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(),
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ));
+                        }
+                      }, builder: (context, state) {
+                        final cubit = BlocProvider.of<LoginByGoogleCubit>(context);
+                        return Container(
+                          height: 60,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              cubit.loginByGoole();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                            ),
+                            child: Image.asset('image/appetit/google.png', width: 70, height: 70),
+                          ),
+                        );
+                      }),
                     ),
                   ),
                   SizedBox(width: 16),
@@ -132,8 +164,7 @@ class _AWelcomeScreenState extends State<AWelcomeScreen> {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                            primary: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                            primary: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                         child: Image.asset('image/appetit/Apple.png', width: 60, height: 60),
                       ),
                     ),
@@ -148,7 +179,7 @@ class _AWelcomeScreenState extends State<AWelcomeScreen> {
                 children: [
                   Text('Have an account ? ', style: TextStyle(fontWeight: FontWeight.w300)),
                   InkWell(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ALoginScreen())),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen())),
                     child: Text('Login', style: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                 ],

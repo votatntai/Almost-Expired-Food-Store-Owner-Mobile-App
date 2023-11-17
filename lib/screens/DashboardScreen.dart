@@ -1,29 +1,31 @@
-import 'package:appetit/fragments/AHomeFragment.dart';
+import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
+import 'package:appetit/fragments/HomeFragment.dart';
 import 'package:appetit/fragments/ANotificationFragment.dart';
 import 'package:appetit/fragments/AProfileFragment.dart';
-import 'package:appetit/screens/AAddRecipeScreen.dart';
 import 'package:appetit/fragments/ASearchFragment.dart';
+import 'package:appetit/screens/CreateCampaignScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ADashboardScreen extends StatefulWidget {
-  ADashboardScreen({Key? key}) : super(key: key);
+class DashboardScreen extends StatefulWidget {
+  DashboardScreen({Key? key}) : super(key: key);
 
   @override
-  State<ADashboardScreen> createState() => _ADashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _ADashboardScreenState extends State<ADashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> {
   int selectedItem = 0;
 
   void onTapSelection(int index) {
     if (index == 2)
-      Navigator.push(context, MaterialPageRoute(builder: (context) => AAddRecipeScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider<CreateCampaignCubit>(create: (context) => CreateCampaignCubit(), child: CreateCampaignScreen())));
     else
       setState(() => selectedItem = index);
   }
 
   List<Widget> widgetOption = <Widget>[
-    AHomeFragment(),
+    HomeFragment(),
     ASearchFragment(),
     SizedBox(),
     ANotificationFragment(),
