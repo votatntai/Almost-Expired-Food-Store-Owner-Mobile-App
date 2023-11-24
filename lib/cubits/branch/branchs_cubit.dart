@@ -17,3 +17,19 @@ class BranchsCubit extends Cubit<BranchsState> {
     }
   }
 }
+
+//Create branch
+class CreateBranchCubit extends Cubit<CreateBranchState> {
+  final BranchRepo _branchRepo = getIt<BranchRepo>();
+  CreateBranchCubit():super(CreateBranchState());
+
+  Future<void> createBranch(String address, double lat, double lng, String phone) async {
+    try {
+      emit(CreateBranchLoadingState());
+      final statusCode = await _branchRepo.createBranch(address, lat, lng, phone);
+      emit(CreateBranchSuccessState(statusCode: statusCode));
+    } on Exception catch (e) {
+      emit(CreateBranchFailedState(msg: e.toString()));
+    }
+  }
+}

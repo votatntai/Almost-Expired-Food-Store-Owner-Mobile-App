@@ -1,10 +1,55 @@
+import 'package:appetit/cubits/branch/branchs_cubit.dart';
+import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
+import 'package:appetit/cubits/product/products_cubit.dart';
+import 'package:appetit/cubits/store/stores_cubit.dart';
+import 'package:appetit/screens/BranchsScreen.dart';
+import 'package:appetit/screens/CampaignScreen.dart';
+import 'package:appetit/screens/CreateBranchScreen.dart';
+import 'package:appetit/screens/CreateCampaignScreen.dart';
+import 'package:appetit/screens/CreateProductScreen.dart';
+import 'package:appetit/screens/CreateStoreScreen.dart';
+import 'package:appetit/screens/DashboardScreen.dart';
 import 'package:appetit/screens/LoginScreen.dart';
+import 'package:appetit/screens/ProductScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../screens/CampaignsScreen.dart';
 
 PageRoute? generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case LoginScreen.routeName:
       return MaterialPageRoute(builder: (_) => LoginScreen());
+    case CreateStoreScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<CreateStoreCubit>(create: (context) => CreateStoreCubit(), child: CreateStoreScreen()));
+    case DashboardScreen.routeName:
+      return MaterialPageRoute(builder: (_) => DashboardScreen());
+    case BranchsScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<BranchsCubit>(create: (context) => BranchsCubit(), child: BranchsScreen()));
+    case CreateBranchScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<CreateBranchCubit>(create: (context) => CreateBranchCubit(), child: CreateBranchScreen()));
+    case CreateCampaignScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(providers: [
+                BlocProvider<CreateCampaignCubit>(create: (context) => CreateCampaignCubit()),
+                BlocProvider<BranchsCubit>(
+                  create: (context) => BranchsCubit(),
+                )
+              ], child: CreateCampaignScreen()));
+    case CampaignScreen.routeName:
+      return MaterialPageRoute(builder: (_) => CampaignScreen());
+    case CampaignsScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit(), child: CampaignsScreen()));
+    case ProductScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(storeId: settings.arguments as String), child: ProductScreen()));
+    case CreateProductScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(providers: [
+                BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit()),
+                BlocProvider<StoresCubit>(create: (context) => StoresCubit()),
+                BlocProvider<CreateProductCubit>(create: (context) => CreateProductCubit())
+              ], child: CreateProductScreen()));
+
     default:
   }
   return null;

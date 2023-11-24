@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.prokit.almost_expired_food_customer_app"
+        applicationId "com.prokit.almost_expired_food_store_owner_app"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 2

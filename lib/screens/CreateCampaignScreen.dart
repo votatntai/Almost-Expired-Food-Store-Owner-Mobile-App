@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
 import 'package:appetit/cubits/campaign/campaigns_state.dart';
-import 'package:appetit/domains/models/CreateCampaign.dart';
 import 'package:appetit/main.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/widgets/AppBar.dart';
@@ -15,10 +13,12 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../cubits/branch/branchs_cubit.dart';
 import '../cubits/branch/branchs_state.dart';
-import '../domains/models/Branchs.dart';
+import '../domains/models/branchs.dart';
+import '../domains/models/campaign/createCampaign.dart';
 import '../utils/gap.dart';
 
 class CreateCampaignScreen extends StatefulWidget {
+  static const String routeName = '/create-campaign';
   CreateCampaignScreen({Key? key}) : super(key: key);
 
   @override
@@ -32,7 +32,6 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
   late TextEditingController _endTimeController;
   String _campaignName = '';
   Branch _selectedBranch = Branch();
-  String _base64Image = '';
 
   @override
   void initState() {
@@ -91,9 +90,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
   Future<void> _getImage(BuildContext context) async {
     XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
-      List<int> _imageBytes = await image.readAsBytes();
       setState(() {
-        _base64Image = base64Encode(_imageBytes);
         _imageFile = File(image.path);
       });
       // widget.onImageSelected(image);
@@ -154,7 +151,10 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                                 // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
                               ],
                             )
-                          : Image.file(_imageFile!),
+                          : Image.file(
+                              _imageFile!,
+                              fit: BoxFit.cover,
+                            ),
                     ).onTap(() {
                       // _pickImage(ImageSource.gallery);
                       _getImage(context);
@@ -251,6 +251,11 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                       ),
                     ),
                   ),
+                  Gap.k16.height,
+                  Text(
+                    '(*): Bắt buộc nhập',
+                    style: TextStyle(color: grey),
+                  ),
                 ],
               ),
             ),
@@ -267,7 +272,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                               campaign: CreateCampaign(
                                   branchId: _selectedBranch.id,
                                   name: _campaignName,
-                                  thumbnailUrl: _imageFile,
+                                  thumbnail: _imageFile,
                                   startTime: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_startTimeController.text).toString()).toString(),
                                   endTime: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_endTimeController.text).toString()).toString()));
                           showDialog(
@@ -334,7 +339,7 @@ class ProcessingPopup extends StatelessWidget {
                 Text('Tạo chiến dịch thành công'),
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     child: Text(
                       'Đóng',
