@@ -58,13 +58,9 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
-      // You can customize other properties of the date picker
-      // For example, locale, initial entry mode, etc.
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
-        // _selectedDate = picked;
-        // _selectedDate = DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(picked.toString());
         _startTimeController.text = '${picked.day}/${picked.month}/${picked.year}';
       });
     }
@@ -76,12 +72,9 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
-      // You can customize other properties of the date picker
-      // For example, locale, initial entry mode, etc.
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
-        // _selectedDate = DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(picked.toString());
         _endTimeController.text = '${picked.day}/${picked.month}/${picked.year}';
       });
     }
@@ -93,7 +86,6 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
       setState(() {
         _imageFile = File(image.path);
       });
-      // widget.onImageSelected(image);
     }
   }
 

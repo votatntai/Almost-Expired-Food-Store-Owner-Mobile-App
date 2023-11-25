@@ -2,6 +2,7 @@ import 'package:appetit/cubits/profile/account_cubit.dart';
 import 'package:appetit/cubits/profile/account_state.dart';
 import 'package:appetit/cubits/store/stores_cubit.dart';
 import 'package:appetit/cubits/store/stores_state.dart';
+import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/screens/CampaignsScreen.dart';
 import 'package:appetit/screens/CreateStoreScreen.dart';
@@ -58,6 +59,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         }
         if (state is StoresSuccessState) {
           if (state.stores.stores!.isNotEmpty) {
+            StoresRepo.storeId = state.stores.stores!.first.id.toString();
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

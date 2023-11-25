@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 
 class StoresRepo {
   final Dio apiClient = getIt<Dio>();
-
+  static String storeId = '';
   Future<Stores> getStoresByOwner() async {
     try {
       var res = await apiClient.get('/api/stores/store-owner');

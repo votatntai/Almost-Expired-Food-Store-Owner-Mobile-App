@@ -218,7 +218,7 @@ class ProcessingPopup extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('Tạo chiến dịch thành công'),
+                Text('Tạo chi nhánh thành công'),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).popUntil((route) => route.isFirst);

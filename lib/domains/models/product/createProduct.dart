@@ -1,10 +1,12 @@
 import 'dart:core';
 import 'dart:io';
 
+import 'package:appetit/domains/models/categories.dart';
+
 class CreateProduct {
   String name;
   String campaignId;
-  List<Map<String, String>> categoriesId;
+  List<Category> categoriesId;
   String description;
   int price;
   int promotionalPrice;
