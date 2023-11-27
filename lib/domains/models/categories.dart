@@ -82,18 +82,21 @@ class Category {
 class CategoryGroup {
   String? id;
   String? name;
+  String? thumbnailUrl;
 
-  CategoryGroup({this.id, this.name});
+  CategoryGroup({this.id, this.name, this.thumbnailUrl});
 
   CategoryGroup.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    thumbnailUrl = json['thumbnailUrl'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['thumbnailUrl'] = this.thumbnailUrl;
     return data;
   }
 }

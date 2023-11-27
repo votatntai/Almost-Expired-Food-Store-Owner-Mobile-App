@@ -21,7 +21,9 @@ class BranchsScreen extends StatelessWidget {
     branchsCubit.getBranchsOfOwner();
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.small(onPressed: () {
+      floatingActionButton: FloatingActionButton.small(
+        backgroundColor: Colors.orange.shade600,
+        onPressed: () {
         Navigator.pushNamed(context, CreateBranchScreen.routeName);
       }, child: Icon(Icons.add_outlined, color: white,),),
       backgroundColor: appLayout_background,
@@ -49,10 +51,10 @@ class BranchsScreen extends StatelessWidget {
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [Text('Địa chỉ: ' + branchs![index].address!), Gap.k4.height, Text('Số điện thoại: ' + branchs[index].phone!)],
+                            children: [Text(branchs![index].address!), Gap.k4.height, Text('Số điện thoại: ' + branchs[index].phone!, style: TextStyle(color: grey),)],
                           ),
                           Icon(
-                            Icons.map_outlined,
+                            Icons.edit,
                             color: iconColorSecondary,
                           )
                         ],

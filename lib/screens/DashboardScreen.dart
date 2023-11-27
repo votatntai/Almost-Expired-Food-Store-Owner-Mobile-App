@@ -4,7 +4,7 @@ import 'package:appetit/cubits/profile/account_cubit.dart';
 import 'package:appetit/cubits/store/stores_cubit.dart';
 import 'package:appetit/fragments/HomeFragment.dart';
 import 'package:appetit/fragments/ANotificationFragment.dart';
-import 'package:appetit/fragments/AProfileFragment.dart';
+import 'package:appetit/fragments/ProfileFragment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,7 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<Widget> widgetOption = <Widget>[
     HomeFragment(),
     ANotificationFragment(),
-    AProfileFragment(),
+    ProfileFragment(),
   ];
 
   @override

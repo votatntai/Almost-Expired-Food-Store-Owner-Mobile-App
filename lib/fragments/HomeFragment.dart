@@ -6,7 +6,8 @@ import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/screens/CampaignsScreen.dart';
 import 'package:appetit/screens/CreateStoreScreen.dart';
-import 'package:appetit/screens/ProductScreen.dart';
+import 'package:appetit/screens/HistoryScreen.dart';
+import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/main.dart';
 import 'package:appetit/utils/gap.dart';
@@ -69,7 +70,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text('Hello,', style: TextStyle(color: appStore.isDarkModeOn ? Colors.grey : Colors.black.withOpacity(0.4))),
+                      child: Text('Xin chào,', style: TextStyle(color: appStore.isDarkModeOn ? Colors.grey : Colors.black.withOpacity(0.4))),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -111,7 +112,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                             Image.asset('image/appetit/campaign.png', color: Colors.orange.shade700),
                             Gap.k8.height,
                             Text(
-                              'Campaigns',
+                              'Chiến dịch',
                               style: TextStyle(color: appTextColorSecondary),
                             )
                           ],
@@ -137,13 +138,13 @@ class _HomeFragmentState extends State<HomeFragment> {
                             Image.asset('image/appetit/products.png', color: Colors.orange.shade400, width: 60, height: 60,),
                             Gap.k8.height,
                             Text(
-                              'Products',
+                              'Sản phẩm',
                               style: TextStyle(color: appTextColorSecondary),
                             )
                           ],
                         ),
                       ).onTap((){
-                        Navigator.pushNamed(context, ProductScreen.routeName, arguments: state.stores.stores!.first.id);
+                        Navigator.pushNamed(context, ProductsScreen.routeName, arguments: state.stores.stores!.first.id);
                       }),
                       Container(
                         decoration: BoxDecoration(
@@ -163,7 +164,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                             Image.asset('image/appetit/branches.png', color: Colors.orange.shade600),
                             Gap.k8.height,
                             Text(
-                              'Branchs',
+                              'Chi nhánh',
                               style: TextStyle(color: appTextColorSecondary),
                             )
                           ],
@@ -189,12 +190,14 @@ class _HomeFragmentState extends State<HomeFragment> {
                             Image.asset('image/appetit/sold.png', color: Colors.orange.shade500, height: 60,),
                             Gap.k8.height,
                             Text(
-                              'History',
+                              'Đã bán',
                               style: TextStyle(color: appTextColorSecondary),
                             )
                           ],
                         ),
-                      ),
+                      ).onTap((){
+                        Navigator.pushNamed(context, HistoryScreen.routeName);
+                      }),
                     ],
                   ),
                 )

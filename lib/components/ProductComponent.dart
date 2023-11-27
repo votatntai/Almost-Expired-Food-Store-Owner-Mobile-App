@@ -1,7 +1,6 @@
 import 'package:appetit/utils/format_utils.dart';
 import 'package:appetit/utils/gap.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../domains/models/product/products.dart';
@@ -37,7 +36,7 @@ class ProductComponent extends StatelessWidget {
                   ),
                   product.productCategories != null
                       ? Text(
-                          product.productCategories!.first.category!.name
+                          product.productCategories!.first.name
                               .toString(),
                           style: TextStyle(color: Colors.grey, fontSize: 14),
                         )
@@ -73,8 +72,7 @@ class ProductComponent extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4)),
                         child: Text(
                           'Giảm ' +
-                              ((product.price! / product.promotionalPrice! -
-                                          1) *
+                              (((product.price! - product.promotionalPrice!) / product.price!) *
                                       100)
                                   .round()
                                   .toString() +
@@ -89,58 +87,30 @@ class ProductComponent extends StatelessWidget {
                   ),
                 ],
               ).expand(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Còn ' +
-                        DateTime.parse(product.expiredAt!)
-                            .difference(DateTime.now())
-                            .inDays
-                            .toString() +
-                        ' ngày',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: DateTime.parse(product.expiredAt!)
-                                    .difference(DateTime.now())
-                                    .inDays <=
-                                10
-                            ? Colors.redAccent
-                            : DateTime.parse(product.expiredAt!)
-                                            .difference(DateTime.now())
-                                            .inDays <=
-                                        30 &&
-                                    DateTime.parse(product.expiredAt!)
-                                            .difference(DateTime.now())
-                                            .inDays >
-                                        10
-                                ? Colors.orangeAccent
-                                : Colors.green),
-                  ),
-                  Gap.k8.height,
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border:
-                            Border.all(width: 1, color: Colors.orangeAccent)),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Mua ',
-                          style: TextStyle(
-                              color: Colors.orangeAccent,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SvgPicture.asset(
-                          'image/appetit/cart-shopping.svg',
-                          width: 16,
-                          color: Colors.orangeAccent,
-                        )
-                      ],
-                    ),
-                  )
-                ],
+              Text(
+                'Còn ' +
+                    DateTime.parse(product.expiredAt!)
+                        .difference(DateTime.now())
+                        .inDays
+                        .toString() +
+                    ' ngày',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: DateTime.parse(product.expiredAt!)
+                                .difference(DateTime.now())
+                                .inDays <=
+                            10
+                        ? Colors.redAccent
+                        : DateTime.parse(product.expiredAt!)
+                                        .difference(DateTime.now())
+                                        .inDays <=
+                                    30 &&
+                                DateTime.parse(product.expiredAt!)
+                                        .difference(DateTime.now())
+                                        .inDays >
+                                    10
+                            ? Colors.orangeAccent
+                            : Colors.green),
               )
             ]))
         // .onTap(() => Navigator.pushNamed(context, ProductDetailScreen.routeName,

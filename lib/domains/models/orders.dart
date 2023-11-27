@@ -1,19 +1,19 @@
-import '../categories.dart';
+import 'categories.dart';
 
-class Products {
+class Orders {
   Pagination? pagination;
-  List<Product>? products;
+  List<Order>? orders;
 
-  Products({this.pagination, this.products});
+  Orders({this.pagination, this.orders});
 
-  Products.fromJson(Map<String, dynamic> json) {
+  Orders.fromJson(Map<String, dynamic> json) {
     pagination = json['pagination'] != null
         ? new Pagination.fromJson(json['pagination'])
         : null;
     if (json['data'] != null) {
-      products = <Product>[];
+      orders = <Order>[];
       json['data'].forEach((v) {
-        products!.add(new Product.fromJson(v));
+        orders!.add(new Order.fromJson(v));
       });
     }
   }
@@ -23,8 +23,8 @@ class Products {
     if (this.pagination != null) {
       data['pagination'] = this.pagination!.toJson();
     }
-    if (this.products != null) {
-      data['data'] = this.products!.map((v) => v.toJson()).toList();
+    if (this.orders != null) {
+      data['data'] = this.orders!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -48,6 +48,78 @@ class Pagination {
     data['pageNumber'] = this.pageNumber;
     data['pageSize'] = this.pageSize;
     data['totalRow'] = this.totalRow;
+    return data;
+  }
+}
+
+class Order {
+  String? id;
+  int? amount;
+  bool? isPayment;
+  String? createAt;
+  String? status;
+  List<OrderDetails>? orderDetails;
+
+  Order(
+      {this.id,
+      this.amount,
+      this.isPayment,
+      this.createAt,
+      this.status,
+      this.orderDetails});
+
+  Order.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    amount = json['amount'];
+    isPayment = json['isPayment'];
+    createAt = json['createAt'];
+    status = json['status'];
+    if (json['orderDetails'] != null) {
+      orderDetails = <OrderDetails>[];
+      json['orderDetails'].forEach((v) {
+        orderDetails!.add(new OrderDetails.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['amount'] = this.amount;
+    data['isPayment'] = this.isPayment;
+    data['createAt'] = this.createAt;
+    data['status'] = this.status;
+    if (this.orderDetails != null) {
+      data['orderDetails'] = this.orderDetails!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class OrderDetails {
+  String? id;
+  Product? product;
+  int? quantity;
+  int? price;
+
+  OrderDetails({this.id, this.product, this.quantity, this.price});
+
+  OrderDetails.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    product =
+        json['product'] != null ? new Product.fromJson(json['product']) : null;
+    quantity = json['quantity'];
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    if (this.product != null) {
+      data['product'] = this.product!.toJson();
+    }
+    data['quantity'] = this.quantity;
+    data['price'] = this.price;
     return data;
   }
 }
@@ -124,3 +196,4 @@ class Product {
     return data;
   }
 }
+
