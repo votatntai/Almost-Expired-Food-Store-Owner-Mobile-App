@@ -27,6 +27,8 @@ class HistoryScreen extends StatelessWidget {
       body: BlocBuilder<OrdersCubit, OrdersState>(builder: (context, state) {
         if (state is OrdersSuccessState) {
           var orders = state.orders.orders;
+          if (orders!.isNotEmpty) {
+            
           return ListView.separated(
               padding: EdgeInsets.symmetric(vertical: 16),
               itemBuilder: (context, index) {
@@ -101,6 +103,9 @@ class HistoryScreen extends StatelessWidget {
               },
               separatorBuilder: (context, index) => Gap.k8.height,
               itemCount: orders!.length);
+          } else {
+            return Center(child: Text('Chưa có đơn hàng.'),);
+          }
         }
         return SizedBox.shrink();
       }),
