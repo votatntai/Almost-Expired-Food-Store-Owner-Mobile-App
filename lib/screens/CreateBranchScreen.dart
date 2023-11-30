@@ -221,7 +221,8 @@ class ProcessingPopup extends StatelessWidget {
                 Text('Tạo chi nhánh thành công'),
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                     child: Text(
                       'Đóng',

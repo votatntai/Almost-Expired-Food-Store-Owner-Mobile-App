@@ -9,7 +9,7 @@ class AccountRepo {
 
   Future<Account> getAccountInformation() async {
     try {
-      var res = await apiClient.get('/store-owners/information');
+      var res = await apiClient.get('/api/store-owners/information');
       return Account.fromJson(res.data);
     } on DioException {
       throw Exception(msg_server_error);
