@@ -12,7 +12,7 @@ import '../utils/gap.dart';
 import '../widgets/SkeletonWidget.dart';
 
 class ProductsScreen extends StatefulWidget {
-  static const String routeName = '/product';
+  static const String routeName = '/products';
   const ProductsScreen({Key? key}) : super(key: key);
 
   @override

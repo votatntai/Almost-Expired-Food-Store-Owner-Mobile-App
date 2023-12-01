@@ -16,6 +16,11 @@ class BranchsCubit extends Cubit<BranchsState> {
       emit(BranchsFailedState(msg: e.toString()));
     }
   }
+
+  void refresh(){
+    emit(BranchsLoadingState());
+    getBranchsOfOwner();
+  }
 }
 
 //Create branch

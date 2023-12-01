@@ -1,5 +1,6 @@
 import 'package:appetit/cubits/branch/branchs_cubit.dart';
 import 'package:appetit/cubits/branch/branchs_state.dart';
+import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -179,7 +180,20 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               ),
-            ) : SizedBox.shrink(),
+            ) : ElevatedButton(
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.grey.shade400,
+                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          ),
+                        ),
           ],
         ),
       ),
@@ -223,6 +237,7 @@ class ProcessingPopup extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed(BranchsScreen.routeName);
                     },
                     child: Text(
                       'Đóng',

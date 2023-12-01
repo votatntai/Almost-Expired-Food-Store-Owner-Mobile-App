@@ -36,7 +36,7 @@ class ProductComponent extends StatelessWidget {
                   ),
                   product.productCategories != null
                       ? Text(
-                          product.productCategories!.first.name
+                          product.productCategories!.first.category!.name
                               .toString(),
                           style: TextStyle(color: Colors.grey, fontSize: 14),
                         )

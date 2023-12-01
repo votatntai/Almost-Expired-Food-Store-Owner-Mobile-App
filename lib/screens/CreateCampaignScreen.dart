@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
 import 'package:appetit/cubits/campaign/campaigns_state.dart';
 import 'package:appetit/main.dart';
+import 'package:appetit/screens/CampaignsScreen.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
@@ -27,22 +28,25 @@ class CreateCampaignScreen extends StatefulWidget {
 
 class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
   File? _imageFile;
-  late DateTime _selectedDate;
-  late TextEditingController _startTimeController;
-  late TextEditingController _endTimeController;
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
+  late TextEditingController _startTimeController = TextEditingController();
+  late TextEditingController _endTimeController = TextEditingController();
   String _campaignName = '';
   Branch _selectedBranch = Branch();
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+    if (_selectedStartDate != null && _selectedEndDate != null) {
+      
     _startTimeController = TextEditingController(
-      text: '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+      text: '${_selectedStartDate!.day}/${_selectedStartDate!.month}/${_selectedStartDate!.year}',
     );
     _endTimeController = TextEditingController(
-      text: '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+      text: '${_selectedEndDate!.day}/${_selectedEndDate!.month}/${_selectedEndDate!.year}',
     );
+    }
   }
 
   @override
@@ -55,12 +59,13 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
   void _selectStartTime(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      initialDate: _selectedStartDate != null ? _selectedStartDate! : DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: _selectedEndDate != null ? _selectedEndDate!.subtract(Duration(days: 1)) : DateTime(2100),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != _selectedStartDate) {
       setState(() {
+        _selectedStartDate = picked;
         _startTimeController.text = '${picked.day}/${picked.month}/${picked.year}';
       });
     }
@@ -69,12 +74,13 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
   void _selectEndTime(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
+      initialDate: _selectedStartDate != null ? _selectedStartDate!.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)),
+      firstDate: _selectedStartDate != null ? _selectedStartDate!.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != _selectedEndDate) {
       setState(() {
+        _selectedEndDate = picked;
         _endTimeController.text = '${picked.day}/${picked.month}/${picked.year}';
       });
     }
@@ -121,7 +127,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                         filled: true,
                         labelStyle: TextStyle(color: Colors.grey),
                         hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Tên chiến dịch',
+                        labelText: 'Tên chiến dịch*',
                         hintText: 'Nhập tên chiến dịch',
                       ),
                     ),
@@ -139,7 +145,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                               children: [
                                 Icon(Icons.file_upload_outlined, color: Colors.grey),
                                 SizedBox(height: 8),
-                                Text('Tải lên ảnh bìa chiến dịch', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
+                                Text('Tải lên ảnh bìa chiến dịch*', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
                                 // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
                               ],
                             )
@@ -170,7 +176,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                               fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, // Change this to the color you want
                               filled: true,
                               hintStyle: TextStyle(color: Colors.grey),
-                              hintText: 'Chọn chi nhánh',
+                              hintText: 'Chọn chi nhánh*',
                             ),
                             // value: selectedBranch,
                             onChanged: (Branch? newValue) {
@@ -196,7 +202,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                             filled: true,
                             labelStyle: TextStyle(color: Colors.grey),
                             hintStyle: TextStyle(color: Colors.grey),
-                            labelText: 'Chi nhánh',
+                            labelText: 'Chi nhánh*',
                             hintText: 'Chọn chiến dịch',
                           ),
                         ),
@@ -218,7 +224,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                         filled: true,
                         labelStyle: TextStyle(color: Colors.grey),
                         hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Ngày bắt đầu',
+                        labelText: 'Ngày bắt đầu*',
                         hintText: 'Chọn ngày bắt đầu',
                       ),
                     ),
@@ -229,16 +235,17 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                     child: TextField(
                       controller: _endTimeController,
                       readOnly: true,
+                      enabled: _selectedStartDate != null,
                       onTap: () {
                         _selectEndTime(context); // Show the date picker when the text field is tapped
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                        fillColor: _selectedStartDate != null ? ( appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor) : Colors.grey.shade200,
                         filled: true,
                         labelStyle: TextStyle(color: Colors.grey),
                         hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Ngày kết thúc',
+                        labelText: 'Ngày kết thúc*',
                         hintText: 'Chọn ngày kết thúc',
                       ),
                     ),
@@ -287,7 +294,20 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                         ),
                       )
-                    : SizedBox.shrink(),
+                    : ElevatedButton(
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.grey.shade400,
+                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          ),
+                        ),
               ),
             ],
           ),
@@ -333,6 +353,7 @@ class ProcessingPopup extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed(CampaignsScreen.routeName);
                     },
                     child: Text(
                       'Đóng',

@@ -55,7 +55,7 @@ class Pagination {
 class Product {
   String? id;
   String? name;
-  List<Category>? productCategories;
+  List<ProductCategories>? productCategories;
   String? description;
   int? sold;
   int? quantity;
@@ -86,9 +86,9 @@ class Product {
     id = json['id'];
     name = json['name'];
     if (json['productCategories'] != null) {
-      productCategories = <Category>[];
+      productCategories = <ProductCategories>[];
       json['productCategories'].forEach((v) {
-        productCategories!.add(new Category.fromJson(v));
+        productCategories!.add(new ProductCategories.fromJson(v));
       });
     }
     description = json['description'];
@@ -124,3 +124,24 @@ class Product {
     return data;
   }
 }
+
+class ProductCategories {
+  Category? category;
+
+  ProductCategories({this.category});
+
+  ProductCategories.fromJson(Map<String, dynamic> json) {
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    return data;
+  }
+}
+

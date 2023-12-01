@@ -11,6 +11,7 @@ import 'package:appetit/domains/models/categories.dart';
 import 'package:appetit/domains/models/product/createProduct.dart';
 import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/CreateCampaignScreen.dart';
+import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:appetit/widgets/CreateNew.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +34,9 @@ class CreateProductScreen extends StatefulWidget {
 
 class _CreateProductScreenState extends State<CreateProductScreen> {
   File? _imageFile;
-  DateTime _selectedDate = DateTime.now();
-  TextEditingController _createAtController = TextEditingController();
-  TextEditingController _expiredAtController = TextEditingController();
+  DateTime? _selectedDate;
+  TextEditingController _createAtController = TextEditingController(text: 'Chọn ngày sản xuất');
+  TextEditingController _expiredAtController = TextEditingController(text: 'Chọn hạn sử dụng');
   TextEditingController _productName = TextEditingController();
   TextEditingController _productDescription = TextEditingController();
   TextEditingController _productPrice = TextEditingController();
@@ -45,17 +46,24 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   List<Map<String, bool>> _isCheckCategory = [];
   Campaign _selectedCampaign = Campaign();
   bool _isShowCategoryList = false;
+  bool _isValidProPrice = true;
+  bool _isValidExpiredTime = true;
 
   @override
   void initState() {
     final campaignsCubit = BlocProvider.of<CampaignsCubit>(context);
     campaignsCubit.getCampaignsList(storeId: StoresRepo.storeId);
-    _createAtController = TextEditingController(
-      text: '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-    );
-    _expiredAtController = TextEditingController(
-      text: '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-    );
+    if (_selectedDate != null) {
+      _createAtController = TextEditingController(
+        text: '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
+      );
+      _expiredAtController = TextEditingController(
+        text: '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
+      );
+    } else {
+      _createAtController = TextEditingController();
+      _expiredAtController = TextEditingController();
+    }
     super.initState();
   }
 
@@ -74,9 +82,9 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   void _selectCreateAt(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: _selectedDate != null ? _selectedDate! : DateTime.now().subtract(Duration(days: 1)),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now().subtract(Duration(days: 1)),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -88,11 +96,9 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   void _selectExpiredAt(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
+      initialDate: _selectedDate != null ? _selectedDate! : DateTime.now(),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
-      // You can customize other properties of the date picker
-      // For example, locale, initial entry mode, etc.
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -108,7 +114,30 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       setState(() {
         _imageFile = File(image.path);
       });
-      // widget.onImageSelected(image);
+    }
+  }
+
+  void comparePriceAndProPrice() {
+    if (_productPrice.text.toInt() != 0 && _productPromotionalPrice.text.toInt() != 0) {
+      setState(() {
+        _isValidProPrice = _productPrice.text.toInt() > _productPromotionalPrice.text.toInt();
+      });
+    }
+  }
+
+  void compareCreateAndExpiredTime() {
+    if (_createAtController.text != '' && _expiredAtController.text != '') {
+      List<String> createTimeParts = _createAtController.text.split('/');
+      List<String> expiredTimeParts = _expiredAtController.text.split('/');
+      int createDay = int.tryParse(createTimeParts[0])!;
+      int createMonth = int.tryParse(createTimeParts[1])!;
+      int createYear = int.tryParse(createTimeParts[2])!;
+      int expiredDay = int.tryParse(expiredTimeParts[0])!;
+      int expiredMonth = int.tryParse(expiredTimeParts[1])!;
+      int expiredYear = int.tryParse(expiredTimeParts[2])!;
+      setState(() {
+        _isValidExpiredTime = DateTime(createYear, createMonth, createDay).isBefore(DateTime(expiredYear, expiredMonth, expiredDay));
+      });
     }
   }
 
@@ -170,7 +199,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                 fit: BoxFit.cover,
                               ),
                       ).onTap(() {
-                        // _pickImage(ImageSource.gallery);
                         _getImage(context);
                       }),
                     ),
@@ -183,6 +211,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: TextField(
+                              onChanged: (value) => comparePriceAndProPrice(),
                               controller: _productPrice,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
@@ -202,6 +231,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: TextField(
+                              onChanged: (value) => comparePriceAndProPrice(),
                               controller: _productPromotionalPrice,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
@@ -219,6 +249,17 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       ],
                     ),
                     Gap.k16.height,
+                    _isValidProPrice
+                        ? SizedBox.shrink()
+                        : Column(
+                            children: [
+                              Text(
+                                'Giá khuyến mãi phải thấp hơn giá niêm yết.',
+                                style: TextStyle(fontSize: 12, color: Colors.red),
+                              ),
+                              Gap.k16.height
+                            ],
+                          ),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: TextField(
@@ -261,6 +302,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           var categories = state.categories.categories;
                           categories!.forEach((element) => _isCheckCategory.add({element.id.toString(): false}));
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Container(
                                 padding: EdgeInsets.only(left: 16),
@@ -308,27 +350,30 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                               }),
                               _isShowCategoryList
                                   ? Container(
-                                      height: 200,
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: white,
+                                      border: Border.all(width: 1),
+                                      borderRadius: BorderRadius.circular(8)
+                                    ),
+                                      height: 100,
+                                      width: 100,
                                       child: ListView.separated(
                                           scrollDirection: Axis.vertical,
                                           itemBuilder: (context, index) {
-                                            return CheckboxListTile(
-                                              value: _isCheckCategory[index][categories[index].id.toString()] ?? false,
-                                              onChanged: (bool? value) {
-                                                if (_selectedCategories.any((element) => element.id == categories[index].id)) {
-                                                  setState(() {
-                                                    _selectedCategories.remove(categories[index]);
-                                                    _isCheckCategory[index][categories[index].id.toString()] = false;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    _isCheckCategory[index][categories[index].id.toString()] = true;
-                                                    _selectedCategories.add(categories[index]);
-                                                  });
-                                                }
-                                              },
-                                              title: Text(categories[index].name.toString()),
-                                            );
+                                            return Text(categories[index].name.toString()).onTap(() {
+                                              if (_selectedCategories.any((element) => element.id == categories[index].id)) {
+                                                setState(() {
+                                                  _selectedCategories.remove(categories[index]);
+                                                  _isCheckCategory[index][categories[index].id.toString()] = false;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _isCheckCategory[index][categories[index].id.toString()] = true;
+                                                  _selectedCategories.add(categories[index]);
+                                                });
+                                              }
+                                            });
                                           },
                                           separatorBuilder: (context, index) => Divider(),
                                           itemCount: categories.length),
@@ -408,7 +453,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         controller: _createAtController,
                         readOnly: true,
                         onTap: () {
-                          _selectCreateAt(context); // Show the date picker when the text field is tapped
+                          _selectCreateAt(context);
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -428,7 +473,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         controller: _expiredAtController,
                         readOnly: true,
                         onTap: () {
-                          _selectExpiredAt(context); // Show the date picker when the text field is tapped
+                          _selectExpiredAt(context);
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -457,7 +502,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-                  child: (_productName.text != '' && _productDescription.text != '' && _imageFile != null)
+                  child: (_productName.text != '' && _productDescription.text != '' && _imageFile != null && _isValidProPrice)
                       ? ElevatedButton(
                           onPressed: () async {
                             await createProductCubit.createProduct(
@@ -494,7 +539,20 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                           ),
                         )
-                      : SizedBox.shrink(),
+                      : ElevatedButton(
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.grey.shade400,
+                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          ),
+                        ),
                 ),
               ],
             ),
@@ -539,6 +597,7 @@ class ProcessingPopup extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed(ProductsScreen.routeName);
                     },
                     child: Text(
                       'Đóng',

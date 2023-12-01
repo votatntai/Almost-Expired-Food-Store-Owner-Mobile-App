@@ -3,6 +3,7 @@ import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
 import 'package:appetit/cubits/product/products_cubit.dart';
 import 'package:appetit/cubits/store/stores_cubit.dart';
 import 'package:appetit/domains/models/campaign/campaigns.dart';
+import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/screens/CampaignScreen.dart';
 import 'package:appetit/screens/CreateBranchScreen.dart';
@@ -48,7 +49,7 @@ PageRoute? generateRoute(RouteSettings settings) {
     case CampaignsScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit(), child: CampaignsScreen()));
     case ProductsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(storeId: settings.arguments as String), child: ProductsScreen()));
+      return MaterialPageRoute(builder: (_) => BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(storeId: StoresRepo.storeId), child: ProductsScreen()));
     case CreateProductScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [

@@ -1,4 +1,4 @@
-import 'categories.dart';
+import 'product/products.dart';
 
 class Orders {
   Pagination? pagination;
@@ -123,77 +123,3 @@ class OrderDetails {
     return data;
   }
 }
-
-class Product {
-  String? id;
-  String? name;
-  List<Category>? productCategories;
-  String? description;
-  int? sold;
-  int? quantity;
-  int? price;
-  int? promotionalPrice;
-  String? expiredAt;
-  double? rated;
-  String? createAt;
-  String? status;
-  String? thumbnailUrl;
-
-  Product(
-      {this.id,
-      this.name,
-      this.productCategories,
-      this.description,
-      this.sold,
-      this.quantity,
-      this.price,
-      this.promotionalPrice,
-      this.expiredAt,
-      this.rated,
-      this.createAt,
-      this.status,
-      this.thumbnailUrl});
-
-  Product.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    if (json['productCategories'] != null) {
-      productCategories = <Category>[];
-      json['productCategories'].forEach((v) {
-        productCategories!.add(new Category.fromJson(v));
-      });
-    }
-    description = json['description'];
-    sold = json['sold'];
-    quantity = json['quantity'];
-    price = json['price'];
-    promotionalPrice = json['promotionalPrice'];
-    expiredAt = json['expiredAt'];
-    rated = json['rated'];
-    createAt = json['createAt'];
-    status = json['status'];
-    thumbnailUrl = json['thumbnailUrl'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    if (this.productCategories != null) {
-      data['productCategories'] =
-          this.productCategories!.map((v) => v.toJson()).toList();
-    }
-    data['description'] = this.description;
-    data['sold'] = this.sold;
-    data['quantity'] = this.quantity;
-    data['price'] = this.price;
-    data['promotionalPrice'] = this.promotionalPrice;
-    data['expiredAt'] = this.expiredAt;
-    data['rated'] = this.rated;
-    data['createAt'] = this.createAt;
-    data['status'] = this.status;
-    data['thumbnailUrl'] = this.thumbnailUrl;
-    return data;
-  }
-}
-
