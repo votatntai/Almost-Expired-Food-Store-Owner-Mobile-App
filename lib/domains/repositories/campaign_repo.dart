@@ -42,6 +42,9 @@ class CampaignRepo {
       return res.statusCode!;
     } on DioException catch (e) {
       print(e.response);
+      if (e.response!.statusCode == 409) {
+        throw Exception(msg_create_campaign_duplicated);
+      }
       throw Exception(msg_server_error);
     }
   }

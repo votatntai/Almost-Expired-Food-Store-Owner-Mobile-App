@@ -1,5 +1,4 @@
-
-import 'package:appetit/screens/LoginScreen.dart';
+import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -42,7 +41,7 @@ class AuthService {
   try {
     await _googleSignIn.signOut();
     await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+    Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
   } catch (error) {
     print('Error during Google sign out: $error');
   }

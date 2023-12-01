@@ -32,7 +32,7 @@ class HistoryScreen extends StatelessWidget {
           return ListView.separated(
               padding: EdgeInsets.symmetric(vertical: 16),
               itemBuilder: (context, index) {
-                var orderItem = orders![index].orderDetails!.first.product!;
+                var orderItem = orders[index].orderDetails!.first.product!;
                 return Container(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(color: white),
@@ -102,7 +102,7 @@ class HistoryScreen extends StatelessWidget {
                 );
               },
               separatorBuilder: (context, index) => Gap.k8.height,
-              itemCount: orders!.length);
+              itemCount: orders.length);
           } else {
             return Center(child: Text('Chưa có đơn hàng.'),);
           }

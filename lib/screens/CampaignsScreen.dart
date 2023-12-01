@@ -49,22 +49,12 @@ class _CampaignsScreenState extends State<CampaignsScreen> {
             if (state is AccountSuccessState) {
               campaignsCubit.getCampaignsList(storeOwnerId: state.account.id);
               return BlocBuilder<CampaignsCubit, CampaignsState>(builder: (context, state) {
-                if (state is CampaignsLoadingState) {
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: (1 / 1.3), mainAxisSpacing: 16, crossAxisSpacing: 16),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 2,
-                    padding: EdgeInsets.only(left: 12, right: 16, top: 0, bottom: 16),
-                    shrinkWrap: true,
-                    itemBuilder: (context, indext) => SkeletonWidget(borderRadius: 20, height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width),
-                  );
-                }
                 if (state is CampaignsSuccessState) {
                   var campaigns = state.campaigns.campaign;
                   if (campaigns!.isNotEmpty) {
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: (1 / 1.3), mainAxisSpacing: 16, crossAxisSpacing: 16),
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       itemCount: campaigns.length,
                       padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 16),
                       shrinkWrap: true,

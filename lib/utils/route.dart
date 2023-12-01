@@ -15,6 +15,7 @@ import 'package:appetit/screens/HistoryScreen.dart';
 import 'package:appetit/screens/LoginScreen.dart';
 import 'package:appetit/screens/OrderDetailsScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
+import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +24,8 @@ import '../screens/CampaignsScreen.dart';
 
 PageRoute? generateRoute(RouteSettings settings) {
   switch (settings.name) {
+    case WelcomeScreen.routeName:
+      return MaterialPageRoute(builder: (_) => WelcomeScreen());
     case LoginScreen.routeName:
       return MaterialPageRoute(builder: (_) => LoginScreen());
     case CreateStoreScreen.routeName:
@@ -64,7 +67,7 @@ PageRoute? generateRoute(RouteSettings settings) {
                 child: HistoryScreen(),
               ));
     case OrderDetailsScreen.routeName:
-    return MaterialPageRoute(builder: (_) => OrderDetailsScreen());
+      return MaterialPageRoute(builder: (_) => OrderDetailsScreen());
     default:
   }
   return null;

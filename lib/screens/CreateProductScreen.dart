@@ -47,7 +47,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   Campaign _selectedCampaign = Campaign();
   bool _isShowCategoryList = false;
   bool _isValidProPrice = true;
-  bool _isValidExpiredTime = true;
+  // bool _isValidExpiredTime = true;
 
   @override
   void initState() {
@@ -125,21 +125,21 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     }
   }
 
-  void compareCreateAndExpiredTime() {
-    if (_createAtController.text != '' && _expiredAtController.text != '') {
-      List<String> createTimeParts = _createAtController.text.split('/');
-      List<String> expiredTimeParts = _expiredAtController.text.split('/');
-      int createDay = int.tryParse(createTimeParts[0])!;
-      int createMonth = int.tryParse(createTimeParts[1])!;
-      int createYear = int.tryParse(createTimeParts[2])!;
-      int expiredDay = int.tryParse(expiredTimeParts[0])!;
-      int expiredMonth = int.tryParse(expiredTimeParts[1])!;
-      int expiredYear = int.tryParse(expiredTimeParts[2])!;
-      setState(() {
-        _isValidExpiredTime = DateTime(createYear, createMonth, createDay).isBefore(DateTime(expiredYear, expiredMonth, expiredDay));
-      });
-    }
-  }
+  // void compareCreateAndExpiredTime() {
+  //   if (_createAtController.text != '' && _expiredAtController.text != '') {
+  //     List<String> createTimeParts = _createAtController.text.split('/');
+  //     List<String> expiredTimeParts = _expiredAtController.text.split('/');
+  //     int createDay = int.tryParse(createTimeParts[0])!;
+  //     int createMonth = int.tryParse(createTimeParts[1])!;
+  //     int createYear = int.tryParse(createTimeParts[2])!;
+  //     int expiredDay = int.tryParse(expiredTimeParts[0])!;
+  //     int expiredMonth = int.tryParse(expiredTimeParts[1])!;
+  //     int expiredYear = int.tryParse(expiredTimeParts[2])!;
+  //     setState(() {
+  //       _isValidExpiredTime = DateTime(createYear, createMonth, createDay).isBefore(DateTime(expiredYear, expiredMonth, expiredDay));
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

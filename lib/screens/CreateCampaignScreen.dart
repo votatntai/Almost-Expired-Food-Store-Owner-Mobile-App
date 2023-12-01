@@ -39,13 +39,12 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
   void initState() {
     super.initState();
     if (_selectedStartDate != null && _selectedEndDate != null) {
-      
-    _startTimeController = TextEditingController(
-      text: '${_selectedStartDate!.day}/${_selectedStartDate!.month}/${_selectedStartDate!.year}',
-    );
-    _endTimeController = TextEditingController(
-      text: '${_selectedEndDate!.day}/${_selectedEndDate!.month}/${_selectedEndDate!.year}',
-    );
+      _startTimeController = TextEditingController(
+        text: '${_selectedStartDate!.day}/${_selectedStartDate!.month}/${_selectedStartDate!.year}',
+      );
+      _endTimeController = TextEditingController(
+        text: '${_selectedEndDate!.day}/${_selectedEndDate!.month}/${_selectedEndDate!.year}',
+      );
     }
   }
 
@@ -241,7 +240,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        fillColor: _selectedStartDate != null ? ( appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor) : Colors.grey.shade200,
+                        fillColor: _selectedStartDate != null ? (appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor) : Colors.grey.shade200,
                         filled: true,
                         labelStyle: TextStyle(color: Colors.grey),
                         hintStyle: TextStyle(color: Colors.grey),
@@ -295,19 +294,19 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                         ),
                       )
                     : ElevatedButton(
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.grey.shade400,
-                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                          ),
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Tạo', style: TextStyle(fontSize: 18)),
+                          ],
                         ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.grey.shade400,
+                          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        ),
+                      ),
               ),
             ],
           ),
@@ -326,59 +325,158 @@ class ProcessingPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        height: 150,
-        width: 150,
-        padding: const EdgeInsets.all(32.0),
-        child: Builder(builder: (context) {
-          if (state is CreateCampaignLoadingState) {
-            return Column(
-              children: [
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-                Gap.k16.height,
-                Text('Đang xử lý, vui lòng chờ.')
-              ],
-            );
-          }
-          if (state is CreateCampaignSuccessState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Tạo chiến dịch thành công'),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacementNamed(CampaignsScreen.routeName);
-                    },
-                    child: Text(
-                      'Đóng',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ))
-              ],
-            );
-          }
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text('Đã xãy ra sự cố, hãy thử lại'),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Đóng',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ))
-            ],
-          );
-        }),
-      ),
-    );
+    print(state);
+    return state is CreateCampaignLoadingState
+        ? Dialog(
+            child: Container(
+                height: 150,
+                width: 150,
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    Gap.k16.height,
+                    Text('Đang xử lý, vui lòng chờ.')
+                  ],
+                )),
+          )
+        : state is CreateCampaignSuccessState
+            ? Dialog(
+                child: Container(
+                    height: 150,
+                    width: 150,
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      children: [
+                        Text('Tạo chiến dịch thành công'),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacementNamed(CampaignsScreen.routeName);
+                            },
+                            child: Text(
+                              'Đóng',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))
+                      ],
+                    )),
+              )
+            : state is CreateCampaignFailedState
+                ? Dialog(
+                    child: Container(
+                      height: 150,
+                      width: 150,
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text((state as CreateCampaignFailedState).msg.replaceAll('Exception: ', ''), textAlign: TextAlign.center,),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Đóng'))
+                        ],
+                      ),
+                    ),
+                  )
+                : Dialog(
+                    child: Container(
+                      height: 150,
+                      width: 150,
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text('Đã xãy ra sự cố, hãy thử lại'),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Đóng',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ))
+                        ],
+                      ),
+                    ),
+                  );
+    // return Dialog(
+    //   child: Container(
+    //     height: 150,
+    //     width: 150,
+    //     padding: const EdgeInsets.all(32.0),
+    //     child: Builder(builder: (context) {
+    //       if (state is CreateCampaignLoadingState) {
+    //         return Column(
+    //           children: [
+    //             Center(
+    //               child: CircularProgressIndicator(),
+    //             ),
+    //             Gap.k16.height,
+    //             Text('Đang xử lý, vui lòng chờ.')
+    //           ],
+    //         );
+    //       }
+    //       if (state is CreateCampaignSuccessState) {
+    //         return Column(
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //           children: [
+    //             Text('Tạo chiến dịch thành công'),
+    //             TextButton(
+    //                 onPressed: () {
+    //                   Navigator.of(context).pop();
+    //                   Navigator.of(context).pop();
+    //                   Navigator.of(context).pushReplacementNamed(CampaignsScreen.routeName);
+    //                 },
+    //                 child: Text(
+    //                   'Đóng',
+    //                   style: TextStyle(fontWeight: FontWeight.bold),
+    //                 ))
+    //           ],
+    //         );
+    //       }
+    //       if (state is CreateCampaignFailedState) {
+    //         var msg = (state as CreateCampaignFailedState).msg;
+    //         Column(
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //         children: [
+    //           Text(msg.toString()),
+    //           TextButton(
+    //               onPressed: () {
+    //                 Navigator.of(context).pop();
+    //               },
+    //               child: Text(
+    //                 'Đóng',
+    //                 style: TextStyle(fontWeight: FontWeight.bold),
+    //               ))
+    //         ],
+    //       );
+    //       }
+    //       return Column(
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //         children: [
+    //           Text('Đã xãy ra sự cố, hãy thử lại'),
+    //           TextButton(
+    //               onPressed: () {
+    //                 Navigator.of(context).pop();
+    //               },
+    //               child: Text(
+    //                 'Đóng',
+    //                 style: TextStyle(fontWeight: FontWeight.bold),
+    //               ))
+    //         ],
+    //       );
+    //     }),
+    //   ),
+    // );
   }
 }

@@ -12,6 +12,7 @@ import '../utils/messages.dart';
 import 'DashboardScreen.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  static const String routeName = '/welcome';
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
