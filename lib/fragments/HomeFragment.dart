@@ -6,7 +6,8 @@ import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/screens/CampaignsScreen.dart';
 import 'package:appetit/screens/CreateStoreScreen.dart';
-import 'package:appetit/screens/HistoryScreen.dart';
+import 'package:appetit/screens/ManageOrdersScreen.dart';
+import 'package:appetit/screens/OrdersSoldScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/main.dart';
@@ -190,13 +191,13 @@ class _HomeFragmentState extends State<HomeFragment> {
                             Image.asset('image/appetit/sold.png', color: Colors.orange.shade500, height: 60,),
                             Gap.k8.height,
                             Text(
-                              'Đã bán',
+                              'Đơn hàng',
                               style: TextStyle(color: appTextColorSecondary),
                             )
                           ],
                         ),
                       ).onTap((){
-                        Navigator.pushNamed(context, HistoryScreen.routeName);
+                        Navigator.pushNamed(context, ManageOrdersScreen.routeName);
                       }),
                     ],
                   ),

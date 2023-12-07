@@ -11,7 +11,8 @@ import 'package:appetit/screens/CreateCampaignScreen.dart';
 import 'package:appetit/screens/CreateProductScreen.dart';
 import 'package:appetit/screens/CreateStoreScreen.dart';
 import 'package:appetit/screens/DashboardScreen.dart';
-import 'package:appetit/screens/HistoryScreen.dart';
+import 'package:appetit/screens/ManageOrdersScreen.dart';
+import 'package:appetit/screens/OrdersSoldScreen.dart';
 import 'package:appetit/screens/LoginScreen.dart';
 import 'package:appetit/screens/OrderDetailsScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubits/order/orders_cubit.dart';
 import '../screens/CampaignsScreen.dart';
+import '../screens/OrdersWaitPickupScreen.dart';
 
 PageRoute? generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -60,14 +62,22 @@ PageRoute? generateRoute(RouteSettings settings) {
                 BlocProvider<StoresCubit>(create: (context) => StoresCubit()),
                 BlocProvider<CreateProductCubit>(create: (context) => CreateProductCubit())
               ], child: CreateProductScreen()));
-    case HistoryScreen.routeName:
+    case OrdersSoldScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => BlocProvider(
                 create: (context) => OrdersCubit(),
-                child: HistoryScreen(),
+                child: OrdersSoldScreen(),
+              ));
+    case OrdersWaitPickupScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+                create: (context) => OrdersCubit(),
+                child: OrdersWaitPickupScreen(),
               ));
     case OrderDetailsScreen.routeName:
       return MaterialPageRoute(builder: (_) => OrderDetailsScreen());
+    case ManageOrdersScreen.routeName:
+      return MaterialPageRoute(builder: (_) => ManageOrdersScreen());
     default:
   }
   return null;

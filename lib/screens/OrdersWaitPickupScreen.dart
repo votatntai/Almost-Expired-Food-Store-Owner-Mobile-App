@@ -11,14 +11,14 @@ import 'package:nb_utils/nb_utils.dart';
 import '../utils/format_utils.dart';
 import '../utils/gap.dart';
 
-class HistoryScreen extends StatelessWidget {
-  static const String routeName = '/history';
-  const HistoryScreen({Key? key}) : super(key: key);
+class OrdersWaitPickupScreen extends StatelessWidget {
+  static const String routeName = '/wait-pickup';
+  const OrdersWaitPickupScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final ordersCubit = BlocProvider.of<OrdersCubit>(context);
-    ordersCubit.getOrdersList(storeId: StoresRepo.storeId);
+    ordersCubit.getOrdersList(storeId: StoresRepo.storeId, status: 'Pending Pickup');
     return Scaffold(
       backgroundColor: appLayout_background,
       appBar: MyAppBar(
