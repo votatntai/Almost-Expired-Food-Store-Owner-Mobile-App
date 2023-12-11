@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/widgets/place_picker.dart';
 import '../main.dart';
 import '../utils/Colors.dart';
 import '../utils/gap.dart';
@@ -30,35 +32,38 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
   GoogleMapController? _controller;
   LatLng? _selectedLatLng;
   Set<Marker> _markers = {};
+  TextEditingController _searchPlaceController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
   }
-  
+
   @override
   void dispose() {
     _addressController.dispose();
     _phoneController.dispose();
+    _searchPlaceController.dispose();
     super.dispose();
   }
+
   void _addMarker(LatLng latLng) {
-  setState(() {
-    _markers.clear();
-    _markers.add(
-      Marker(
-        markerId: MarkerId('marker_id'),
-        position: latLng,
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(
-          title: 'Your Marker',
-          snippet: 'Description of your marker',
+    setState(() {
+      _markers.clear();
+      _markers.add(
+        Marker(
+          markerId: MarkerId('marker_id'),
+          position: latLng,
+          icon: BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(
+            title: 'Your Marker',
+            snippet: 'Description of your marker',
+          ),
         ),
-      ),
-    );
-  });
-}
+      );
+    });
+  }
 
   void _getCurrentLocation() async {
     PermissionStatus status = await Permission.location.request();
@@ -67,7 +72,6 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
         Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         setState(() {
           _currentPosition = position;
-          print(_currentPosition);
         });
       } catch (e) {
         print('Error: $e');
@@ -76,6 +80,55 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
       print('Location permission denied');
     }
   }
+
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: 'AIzaSyAPZiYIlR-ztOa6maus6urUhs1Z-6spyj4-zI');
+
+  Future<void> _showGooglePlacesAutocomplete(String input) async {
+    PlacesAutocompleteResponse response = await _places.autocomplete(
+      input,
+      language: 'en',
+      types: ['address'], // Có thể thay đổi loại địa điểm cần tìm kiếm
+    );
+
+    if (response.isOkay) {
+      // Xử lý kết quả từ response
+      for (Prediction prediction in response.predictions) {
+        print(prediction.description);
+        print(prediction.placeId);
+        // Các thông tin khác bạn có thể lấy từ prediction
+      }
+    } else {
+      // Xử lý lỗi nếu có
+      print('Error: ${response.errorMessage}');
+    }
+  }
+
+  void showPlacePicker() async {
+    LocationResult? result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyDqrvt4F4XqPjMfkDhb5DYKLzSUYaWz-zI")));
+
+    // Handle the result in your way
+    print('aaaaa ' + result.toString());
+  }
+
+  // Future<void> _showGooglePlacesAutocomplete(BuildContext context) async {
+  //   final places = GoogleMapsPlaces(apiKey: "AIzaSyDqrvt4F4XqPjMfkDhb5DYKLzSUYaWz-zI");
+  //   Prediction? p = await PlacesAutocomplete.show(
+  //     context: context,
+  //     apiKey: "AIzaSyDqrvt4F4XqPjMfkDhb5DYKLzSUYaWz-zI",
+  //     mode: Mode.overlay,
+  //     language: "en",
+  //   );
+  //   if (p != null) {
+  //     PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
+  //     final lat = detail.result.geometry!.location.lat;
+  //     final lng = detail.result.geometry!.location.lng;
+  //     _controller?.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lng)));
+  //     setState(() {
+  //       _selectedLatLng = LatLng(lat, lng);
+  //       _addMarker(_selectedLatLng!);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,12 +177,65 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
               ),
             ),
             SizedBox(height: 16),
+            // Expanded(
+            //   child: Stack(
+            //     children: [
+            //       ClipRRect(
+            //         borderRadius: BorderRadius.circular(15),
+            //         child: Container(
+            //           width: MediaQuery.of(context).size.width,
+            //           color: Colors.grey[300],
+            //           child: (_currentPosition.latitude != 0 && _currentPosition.longitude != 0)
+            //               ? GoogleMap(
+            //                   initialCameraPosition: CameraPosition(target: LatLng(_currentPosition.latitude, _currentPosition.longitude), zoom: 12.0),
+            //                   myLocationButtonEnabled: true,
+            //                   myLocationEnabled: true,
+            //                   markers: _markers,
+            //                   onMapCreated: (controller) {
+            //                     setState(() {
+            //                       _controller = controller;
+            //                     });
+            //                   },
+            //                   onTap: (latLng) {
+            //                     setState(() {
+            //                       _selectedLatLng = latLng;
+            //                       _addMarker(latLng);
+            //                     });
+            //                   },
+            //                 )
+            //               : SizedBox.shrink(),
+            //         ),
+            //       ),
+            //       Positioned(
+            //         top: 16,
+            //         right: 62,
+            //         left: 16,
+            //         child: ClipRRect(
+            //           borderRadius: BorderRadius.circular(16),
+            //           child: TextField(
+            //             // controller: _searchPlaceController,
+            //             onChanged: (value) {_showGooglePlacesAutocomplete(_searchPlaceController.text);},
+            //             decoration: InputDecoration(
+            //               prefixIcon: Icon(Icons.search_outlined),
+            //               border: InputBorder.none,
+            //               fillColor: white,
+            //               filled: true,
+            //               labelStyle: TextStyle(color: Colors.grey),
+            //               hintStyle: TextStyle(color: Colors.grey),
+            //               labelText: 'Tìm địa điểm',
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                  color: Colors.grey[300],
                   child: (_currentPosition.latitude != 0 && _currentPosition.longitude != 0)
                       ? GoogleMap(
                           initialCameraPosition: CameraPosition(target: LatLng(_currentPosition.latitude, _currentPosition.longitude), zoom: 12.0),
@@ -152,48 +258,55 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
                 ),
               ),
             ),
+            // TextButton(
+            //     onPressed: () {
+            //       showPlacePicker();
+            //     },
+            //     child: Text('Tìm địa điểm')),
             Gap.k16.height,
             Text(
               '(*): Bắt buộc nhập',
               style: TextStyle(color: grey),
             ),
             Gap.k16.height,
-            (_addressController.text != '' && _phoneController.text != '' && _selectedLatLng != null) ? ElevatedButton(
-              onPressed: () async {
-                await createBranchCubit.createBranch(_addressController.text, _selectedLatLng!.latitude, _selectedLatLng!.longitude, _phoneController.text);
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ProcessingPopup(
-                        state: createBranchCubit.state,
-                      );
-                    });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Tạo', style: TextStyle(fontSize: 18)),
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.orange.shade600,
-                padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              ),
-            ) : ElevatedButton(
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.grey.shade400,
-                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                          ),
-                        ),
+            (_addressController.text != '' && _phoneController.text != '' && _selectedLatLng != null)
+                ? ElevatedButton(
+                    onPressed: () async {
+                      await createBranchCubit.createBranch(_addressController.text, _selectedLatLng!.latitude, _selectedLatLng!.longitude, _phoneController.text);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ProcessingPopup(
+                              state: createBranchCubit.state,
+                            );
+                          });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Tạo', style: TextStyle(fontSize: 18)),
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange.shade600,
+                      padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    ),
+                  )
+                : ElevatedButton(
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Tạo', style: TextStyle(fontSize: 18)),
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey.shade400,
+                      padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    ),
+                  ),
           ],
         ),
       ),

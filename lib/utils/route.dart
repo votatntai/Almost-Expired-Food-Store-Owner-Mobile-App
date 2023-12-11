@@ -13,14 +13,15 @@ import 'package:appetit/screens/CreateStoreScreen.dart';
 import 'package:appetit/screens/DashboardScreen.dart';
 import 'package:appetit/screens/ManageOrdersScreen.dart';
 import 'package:appetit/screens/OrdersSoldScreen.dart';
-import 'package:appetit/screens/LoginScreen.dart';
 import 'package:appetit/screens/OrderDetailsScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
+import 'package:appetit/screens/UpdateCampaignScreen.dart';
 import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubits/order/orders_cubit.dart';
+import '../domains/models/orders.dart';
 import '../screens/CampaignsScreen.dart';
 import '../screens/OrdersWaitPickupScreen.dart';
 
@@ -28,8 +29,6 @@ PageRoute? generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case WelcomeScreen.routeName:
       return MaterialPageRoute(builder: (_) => WelcomeScreen());
-    case LoginScreen.routeName:
-      return MaterialPageRoute(builder: (_) => LoginScreen());
     case CreateStoreScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<CreateStoreCubit>(create: (context) => CreateStoreCubit(), child: CreateStoreScreen()));
     case DashboardScreen.routeName:
@@ -48,9 +47,12 @@ PageRoute? generateRoute(RouteSettings settings) {
               ], child: CreateCampaignScreen()));
     case CampaignScreen.routeName:
       return MaterialPageRoute(
-          builder: (_) => CampaignScreen(
-                campaign: settings.arguments as Campaign,
-              ));
+          builder: (_) => BlocProvider<DeleteCampaignCubit>(
+            create: (context) => DeleteCampaignCubit(),
+            child: CampaignScreen(
+                  campaign: settings.arguments as Campaign,
+                ),
+          ));
     case CampaignsScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit(), child: CampaignsScreen()));
     case ProductsScreen.routeName:
@@ -75,9 +77,18 @@ PageRoute? generateRoute(RouteSettings settings) {
                 child: OrdersWaitPickupScreen(),
               ));
     case OrderDetailsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => OrderDetailsScreen());
+      Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
+      final orderDetails = arguments['orderDetails'] as List<OrderDetails>;
+      final amount = arguments['amount'] as int;
+      return MaterialPageRoute(
+          builder: (_) => OrderDetailsScreen(
+                orderDetails: orderDetails,
+                amout: amount,
+              ));
     case ManageOrdersScreen.routeName:
       return MaterialPageRoute(builder: (_) => ManageOrdersScreen());
+    case UpdateCampaignScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<UpdateCampaignCubit>(create: (context) => UpdateCampaignCubit(), child: UpdateCampaignScreen(campaign: settings.arguments as Campaign,)));
     default:
   }
   return null;

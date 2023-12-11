@@ -7,7 +7,6 @@ import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/screens/CampaignsScreen.dart';
 import 'package:appetit/screens/CreateStoreScreen.dart';
 import 'package:appetit/screens/ManageOrdersScreen.dart';
-import 'package:appetit/screens/OrdersSoldScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/main.dart';

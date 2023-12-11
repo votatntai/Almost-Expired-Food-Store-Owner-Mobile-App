@@ -29,3 +29,33 @@ class CreateCampaignSuccessState extends CreateCampaignState {
   final int status;
   CreateCampaignSuccessState({required this.status});
 }
+
+//Update campaign
+class UpdateCampaignState {}
+
+class UpdateCampaignLoadingState extends UpdateCampaignState {}
+
+class UpdateCampaignFailedState extends UpdateCampaignState {
+  final String msg;
+  UpdateCampaignFailedState({required this.msg});
+}
+
+class UpdateCampaignSuccessState extends UpdateCampaignState {
+  final int status;
+  UpdateCampaignSuccessState({required this.status});
+}
+
+//Update campaign
+class DeleteCampaignState {}
+
+class DeleteCampaignLoadingState extends DeleteCampaignState {}
+
+class DeleteCampaignFailedState extends DeleteCampaignState {
+  final String msg;
+  DeleteCampaignFailedState({required this.msg});
+}
+
+class DeleteCampaignSuccessState extends DeleteCampaignState {
+  final int status;
+  DeleteCampaignSuccessState({required this.status});
+}

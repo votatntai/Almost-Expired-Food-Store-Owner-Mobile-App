@@ -1,3 +1,5 @@
+import '../branchs.dart';
+
 class Campaigns {
   Pagination? pagination;
   List<Campaign>? campaign;
@@ -56,6 +58,7 @@ class Campaign {
   Branch? branch;
   String? name;
   String? thumbnailUrl;
+  String? status;
   String? createAt;
   String? startTime;
   String? endTime;
@@ -66,6 +69,7 @@ class Campaign {
       this.branch,
       this.name,
       this.thumbnailUrl,
+      this.status,
       this.createAt,
       this.startTime,
       this.endTime});
@@ -79,6 +83,7 @@ class Campaign {
         json['branch'] != null ? new Branch.fromJson(json['branch']) : null;
     name = json['name'];
     thumbnailUrl = json['thumbnailUrl'];
+    status = json['status'];
     createAt = json['createAt'];
     startTime = json['startTime'];
     endTime = json['endTime'];
@@ -95,6 +100,7 @@ class Campaign {
     }
     data['name'] = this.name;
     data['thumbnailUrl'] = this.thumbnailUrl;
+    data['status'] = this.status;
     data['createAt'] = this.createAt;
     data['startTime'] = this.startTime;
     data['endTime'] = this.endTime;
@@ -135,28 +141,6 @@ class StoreOwner {
     data['phone'] = this.phone;
     data['avatarUrl'] = this.avatarUrl;
     data['status'] = this.status;
-    return data;
-  }
-}
-
-class Branch {
-  String? id;
-  String? address;
-  String? phone;
-
-  Branch({this.id, this.address, this.phone});
-
-  Branch.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    address = json['address'];
-    phone = json['phone'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['address'] = this.address;
-    data['phone'] = this.phone;
     return data;
   }
 }

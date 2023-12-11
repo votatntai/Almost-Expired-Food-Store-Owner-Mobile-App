@@ -1,7 +1,11 @@
+
 import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:nb_utils/nb_utils.dart';
+
+import '../utils/Constants.dart';
 
 class AuthService {
   signInWithGoogle() async {
@@ -39,9 +43,18 @@ class AuthService {
   Future<void> signOut(BuildContext context) async {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   try {
-    await _googleSignIn.signOut();
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
+     await _googleSignIn.signOut();
+      await FirebaseAuth.instance.signOut();
+      final isGoogleSignedOut = await _googleSignIn.isSignedIn();
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+
+      if (!isGoogleSignedOut && firebaseUser == null) {
+        // Đã đăng xuất khỏi cả Google SignIn và FirebaseAuth
+        await setValue(TOKEN_KEY, '');
+        Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
+      } else {
+        print('Chưa đăng xuất!!!');
+      }
   } catch (error) {
     print('Error during Google sign out: $error');
   }

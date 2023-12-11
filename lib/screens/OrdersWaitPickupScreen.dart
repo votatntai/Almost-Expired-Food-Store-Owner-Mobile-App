@@ -22,7 +22,7 @@ class OrdersWaitPickupScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: appLayout_background,
       appBar: MyAppBar(
-        title: 'Đã bán',
+        title: 'Chờ nhận hàng',
       ),
       body: BlocBuilder<OrdersCubit, OrdersState>(builder: (context, state) {
         if (state is OrdersSuccessState) {
@@ -85,7 +85,7 @@ class OrdersWaitPickupScreen extends StatelessWidget {
                         Divider(),
                         Text('Xem thêm sản phẩm', style: TextStyle(color: grey, fontSize: 12),)
                       ],).onTap((){
-                        Navigator.pushNamed(context, OrderDetailsScreen.routeName);
+                        Navigator.pushNamed(context, OrderDetailsScreen.routeName, arguments: {'orderDetails': orders[index].orderDetails, 'amount': orders[index].amount});
                       }) : SizedBox.shrink(),
                       Divider(),
                       Row(

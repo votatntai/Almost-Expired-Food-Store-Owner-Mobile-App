@@ -1,7 +1,7 @@
 name: appetit
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 2.0.0
 
@@ -19,27 +19,28 @@ dependencies:
   #get: ^4.6.1
 
   nb_utils: ^5.0.8-beta.2
-  google_fonts: ^5.0.0
+  google_fonts: ^4.0.4
   dio: ^5.3.3
   get_it: ^7.6.4
   image_picker: ^1.0.4
   shimmer: ^3.0.0
   intl: ^0.18.0
   permission_handler: ^11.0.1
-  geolocator: ^10.1.0
+  geolocator: ^9.0.1
   flutter_svg: ^2.0.7
 
-# STATE MANAGEMENT
+  # STATE MANAGEMENT
   bloc: ^8.1.2
   flutter_bloc: ^8.1.3
 
-
-# GOOGLE SERVICE
+  # GOOGLE SERVICE
+  firebase_messaging: ^14.7.8
   google_sign_in: ^6.1.5
   firebase_auth: ^4.10.1
   google_maps_flutter: ^2.5.0
   firebase_core: ^2.22.0
-
+  google_maps_webservice: ^0.0.19
+  place_picker: ^0.10.0
 
 dev_dependencies:
   flutter_test:
@@ -48,16 +49,13 @@ dev_dependencies:
   mobx_codegen: ^2.3.0
   build_runner: ^2.4.5
 
-
 flutter_icons:
   android: true
   ios: true
-  image_path: 'image/appetit/logo.png'
+  image_path: "image/appetit/logo.png"
 
 flutter:
-
   uses-material-design: true
 
   assets:
     - image/appetit/
-
