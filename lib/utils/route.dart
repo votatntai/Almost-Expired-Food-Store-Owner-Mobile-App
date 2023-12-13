@@ -14,6 +14,7 @@ import 'package:appetit/screens/DashboardScreen.dart';
 import 'package:appetit/screens/ManageOrdersScreen.dart';
 import 'package:appetit/screens/OrdersSoldScreen.dart';
 import 'package:appetit/screens/OrderDetailsScreen.dart';
+import 'package:appetit/screens/OrdersWaitPaymentScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/screens/UpdateCampaignScreen.dart';
 import 'package:appetit/screens/WelcomeScreen.dart';
@@ -75,6 +76,12 @@ PageRoute? generateRoute(RouteSettings settings) {
           builder: (_) => BlocProvider(
                 create: (context) => OrdersCubit(),
                 child: OrdersWaitPickupScreen(),
+              ));
+    case OrdersWaitPaymentScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+                create: (context) => OrdersCubit(),
+                child: OrdersWaitPaymentScreen(),
               ));
     case OrderDetailsScreen.routeName:
       Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;

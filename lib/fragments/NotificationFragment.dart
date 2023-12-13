@@ -2,7 +2,6 @@ import 'package:appetit/cubits/notification/notification_cubit.dart';
 import 'package:appetit/cubits/notification/notification_state.dart';
 import 'package:appetit/domains/repositories/notification_repo.dart';
 import 'package:appetit/screens/OrdersWaitPickupScreen.dart';
-import 'package:appetit/utils/ADataProvider.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +37,8 @@ class _NotificationFragmentState extends State<NotificationFragment> {
             }
             if (state is NotificationSuccessState) {
               var notifications = state.notifications.notifications;
+              if (notifications!.isNotEmpty) {
+                
             return SingleChildScrollView(
               physics: ScrollPhysics(),
               padding: EdgeInsets.all(16),
@@ -51,7 +52,7 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                       padding: EdgeInsets.zero,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: notifications!.length,
+                      itemCount: notifications.length,
                       separatorBuilder: (context, index) => Divider(),
                       itemBuilder: (context, index) {
                         return Container(
@@ -109,6 +110,9 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                 ),
               ),
             );
+              } else {
+                return Center(child: Text('Chưa có thông báo'),);
+              }
             } return SizedBox.shrink();
           }
         ),

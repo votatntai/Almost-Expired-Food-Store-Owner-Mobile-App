@@ -56,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             automaticallyImplyLeading: false,
             title: Align(
               alignment: Alignment.center,
-              child: Text('Customer', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400, color: context.iconColor)),
+              child: Text('Store Owner', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400, color: context.iconColor)),
             ),
           ),
           body: SingleChildScrollView(

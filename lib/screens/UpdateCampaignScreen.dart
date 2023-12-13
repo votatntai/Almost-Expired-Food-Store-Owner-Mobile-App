@@ -225,7 +225,7 @@ class _UpdateCampaignScreenState extends State<UpdateCampaignScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Tạo', style: TextStyle(fontSize: 18)),
+                            Text('Lưu', style: TextStyle(fontSize: 18)),
                           ],
                         ),
                         style: ElevatedButton.styleFrom(
@@ -239,7 +239,7 @@ class _UpdateCampaignScreenState extends State<UpdateCampaignScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Tạo', style: TextStyle(fontSize: 18)),
+                            Text('Lưu', style: TextStyle(fontSize: 18)),
                           ],
                         ),
                         style: ElevatedButton.styleFrom(

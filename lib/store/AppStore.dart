@@ -83,7 +83,7 @@ abstract class AppStoreBase with Store {
     }
     setStatusBarColor(scaffoldBackground!);
 
-    setValue(isDarkModeOnPref, isDarkModeOn);
+    setValue(AppConstant.isDarkModeOnPref, isDarkModeOn);
   }
 
   @action

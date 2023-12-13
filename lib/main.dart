@@ -1,6 +1,6 @@
-import 'package:appetit/domains/repositories/user_repo.dart';
 import 'package:appetit/screens/DashboardScreen.dart';
 import 'package:appetit/screens/WelcomeScreen.dart';
+import 'package:appetit/services/messaging_service.dart';
 import 'package:appetit/store/AppStore.dart';
 import 'package:appetit/utils/Constants.dart';
 import 'package:appetit/utils/ADataProvider.dart';
@@ -23,15 +23,8 @@ void main() async {
   await initialize(aLocaleLanguageList: languageList());
   await initialGetIt();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseService firebaseService = FirebaseService();
-  String? token = await firebaseService.getFirebaseToken();
-  if (token != null) {
-    UserRepo.deviceToken = token;
-    print('Token của thiết bị: ${UserRepo.deviceToken}');
-  } else {
-    print('Không thể lấy token của thiết bị');
-  }
-  appStore.toggleDarkMode(value: getBoolAsync(isDarkModeOnPref));
+  await MessagingService().initNotification();
+  appStore.toggleDarkMode(value: getBoolAsync(AppConstant.isDarkModeOnPref));
   defaultToastGravityGlobal = ToastGravity.BOTTOM;
   runApp(const MyApp());
 }
@@ -67,8 +60,8 @@ class MyApp extends StatelessWidget {
 Widget _fetchAuthAndInitialRoute() {
   // final UserRepo _userRepo = getIt.get<UserRepo>();
   try {
-    String accessToken = getStringAsync(TOKEN_KEY);
-    if (accessToken != '') {
+    var accessToken = getStringAsync(AppConstant.TOKEN_KEY);
+    if (accessToken.isNotEmpty) {
       return DashboardScreen();
     }
   } catch (e) {

@@ -7,8 +7,11 @@ import 'package:appetit/cubits/store/stores_cubit.dart';
 import 'package:appetit/fragments/HomeFragment.dart';
 import 'package:appetit/fragments/NotificationFragment.dart';
 import 'package:appetit/fragments/ProfileFragment.dart';
+import 'package:appetit/utils/Constants.dart';
+import 'package:appetit/utils/app_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
@@ -48,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         BlocProvider<AccountCubit>(create: (context) => AccountCubit()),
         BlocProvider<CreateCampaignCubit>(create: (context) => CreateCampaignCubit()),
         BlocProvider<BranchsCubit>(create: (context) => BranchsCubit()),
-        BlocProvider<NotificationCubit>(create: (context) {
+         BlocProvider<NotificationCubit>(create: (context) {
           final notificationCubit = NotificationCubit();
           notificationCubit.getNotifications();
           return notificationCubit;
@@ -69,11 +72,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           selectedItemColor: Colors.orangeAccent,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: BlocBuilder<NotificationCubit, NotificationState>(
-              builder: (context, state) {
-                if (state is NotificationSuccessState) {
-                  
-                return Badge.count(count: state.notifications.notifications!.where((noti) => noti.isRead == false).length, child: Icon(Icons.notifications_outlined));
+            BottomNavigationBarItem(icon: StreamBuilder<int>(
+              stream: watchCountNotify(),
+              builder: (context, snapshot) {
+                int value = snapshot.data ?? 0;
+
+                if (value > 0) {
+                // return Badge.count(count: state.notifications.notifications!.where((noti) => noti.isRead == false).length, child: Icon(Icons.notifications_outlined));
+                return Badge.count(count: getIntAsync(AppConstant.NOTI_COUNT), child: Icon(Icons.notifications_outlined));
                 }
                 return Icon(Icons.notifications_outlined);
               }

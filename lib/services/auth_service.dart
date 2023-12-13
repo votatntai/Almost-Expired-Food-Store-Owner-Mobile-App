@@ -50,7 +50,7 @@ class AuthService {
 
       if (!isGoogleSignedOut && firebaseUser == null) {
         // Đã đăng xuất khỏi cả Google SignIn và FirebaseAuth
-        await setValue(TOKEN_KEY, '');
+        await setValue(AppConstant.TOKEN_KEY, '');
         Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
       } else {
         print('Chưa đăng xuất!!!');

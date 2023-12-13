@@ -107,7 +107,11 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
                               Text(account.email!,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 15)),
+                                      fontSize: 12)),
+                              account.phone != null ? Text(account.phone!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12)) : SizedBox.shrink(),
                             ],
                           ),
                         ),

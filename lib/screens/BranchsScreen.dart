@@ -49,9 +49,12 @@ class BranchsScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [Text(branchs![index].address!), Gap.k4.height, Text('Số điện thoại: ' + branchs[index].phone!, style: TextStyle(color: grey),)],
+                          SizedBox(
+                            width: context.width() * 0.7,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [Text(branchs![index].address!, maxLines: 1, overflow: TextOverflow.ellipsis,), Gap.k4.height, Text('Số điện thoại: ' + branchs[index].phone!, style: TextStyle(color: grey),)],
+                            ),
                           ),
                           Icon(
                             Icons.edit,
