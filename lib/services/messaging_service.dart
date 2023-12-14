@@ -1,11 +1,11 @@
 import 'package:appetit/cubits/notification/notification_cubit.dart';
 import 'package:appetit/domains/repositories/user_repo.dart';
 import 'package:appetit/screens/OrdersWaitPaymentScreen.dart';
+import 'package:appetit/screens/OrdersWaitPickupScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
-
 import '../utils/Constants.dart';
 
 class MessagingService {
@@ -57,11 +57,19 @@ class MessagingService {
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
+        print('payload at click noti event: ' + details.payload.toString());
+        NotificationCubit().getNotifications();
+        if (details.payload == 'Đơn hàng mới') {
           navigatorKey.currentState?.pushNamed(OrdersWaitPaymentScreen.routeName);
+        }
+        if (details.payload == 'Thanh toán thành công') {
+          navigatorKey.currentState?.pushNamed(OrdersWaitPickupScreen.routeName);
+          
+        }
       },
     );
 
-final value = getIntAsync(AppConstant.NOTI_COUNT as String);
+final value = getIntAsync(AppConstant.NOTI_COUNT);
       setValue(AppConstant.NOTI_COUNT, value + 1);
       print(getIntAsync(AppConstant.NOTI_COUNT).toString());
     // Xử lý trường hợp ứng dụng được mở thông qua một thông báo
@@ -103,6 +111,6 @@ final value = getIntAsync(AppConstant.NOTI_COUNT as String);
       body,
       platformChannelSpecifics,
     );
-    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: 'item x');
+    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: title);
   }
 }

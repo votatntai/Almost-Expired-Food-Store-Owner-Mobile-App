@@ -1,5 +1,6 @@
 import 'package:appetit/cubits/branch/branchs_cubit.dart';
 import 'package:appetit/cubits/branch/branchs_state.dart';
+import 'package:appetit/domains/models/branchs.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +15,16 @@ import '../main.dart';
 import '../utils/Colors.dart';
 import '../utils/gap.dart';
 
-class CreateBranchScreen extends StatefulWidget {
-  static const String routeName = '/create-branch';
-  const CreateBranchScreen({Key? key}) : super(key: key);
+class UpdateBranchScreen extends StatefulWidget {
+  static const String routeName = '/update-branch';
+  final Branch branch;
+  const UpdateBranchScreen({Key? key, required this.branch}) : super(key: key);
 
   @override
-  State<CreateBranchScreen> createState() => _CreateBranchScreenState();
+  State<UpdateBranchScreen> createState() => _UpdateBranchScreenState();
 }
 
-class _CreateBranchScreenState extends State<CreateBranchScreen> {
+class _UpdateBranchScreenState extends State<UpdateBranchScreen> {
   // Position _currentPosition =
   //     Position(longitude: 0, latitude: 0, timestamp: DateTime.timestamp(), accuracy: 0, altitude: 0, altitudeAccuracy: 0, heading: 0, headingAccuracy: 0, speed: 0, speedAccuracy: 0);
   TextEditingController _addressController = TextEditingController();
@@ -30,14 +32,15 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
   // ignore: unused_field
   GoogleMapController? _controller;
   LatLng? _selectedLatLng;
-  Set<Marker> _markers = {};
   TextEditingController _searchPlaceController = TextEditingController();
   late LocationResult _locationResult;
 
   @override
   void initState() {
     super.initState();
-    // _getCurrentLocation();
+    _addressController.text = widget.branch.address!;
+    _phoneController.text = widget.branch.phone!;
+    _selectedLatLng = LatLng(widget.branch.latitude!, widget.branch.longitude!);
   }
 
   @override
@@ -47,39 +50,6 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
     _searchPlaceController.dispose();
     super.dispose();
   }
-
-  void _addMarker(LatLng latLng) {
-    setState(() {
-      _markers.clear();
-      _markers.add(
-        Marker(
-          markerId: MarkerId('marker_id'),
-          position: latLng,
-          icon: BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(
-            title: 'Your Marker',
-            snippet: 'Description of your marker',
-          ),
-        ),
-      );
-    });
-  }
-
-  // void _getCurrentLocation() async {
-  //   PermissionStatus status = await Permission.location.request();
-  //   if (status == PermissionStatus.granted) {
-  //     try {
-  //       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  //       setState(() {
-  //         _currentPosition = position;
-  //       });
-  //     } catch (e) {
-  //       print('Error: $e');
-  //     }
-  //   } else {
-  //     print('Location permission denied');
-  //   }
-  // }
 
   void showPlacePicker() async {
     _locationResult = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyClJMtxHGN3ZXNsMBbFSIQvzA2OBRxt6qU")));
@@ -91,15 +61,15 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final createBranchCubit = BlocProvider.of<CreateBranchCubit>(context);
+    final _updateBranchCubit = BlocProvider.of<UpdateBranchCubit>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: MyAppBar(
-        title: 'Tạo chi nhánh',
+        title: 'Cập nhật chi nhánh',
       ),
-      body: BlocListener<CreateBranchCubit, CreateBranchState>(
+      body: BlocListener<UpdateBranchCubit, UpdateBranchState>(
         listener: (context, state) {
-          if (!(state is CreateBranchLoadingState)) {
+          if (!(state is UpdateBranchLoadingState)) {
             Navigator.pop(context);
           }
           showDialog(
@@ -173,13 +143,13 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: (_addressController.text != '' && _phoneController.text != '' && _selectedLatLng != null)
                       ? ElevatedButton(
-                          onPressed: () async {
-                            await createBranchCubit.createBranch(_addressController.text, _selectedLatLng!.latitude, _selectedLatLng!.longitude, _phoneController.text);
+                          onPressed: () {
+                            _updateBranchCubit.updateBranch(branchId: widget.branch.id!, address: _addressController.text, lat: _selectedLatLng!.latitude, lng: _selectedLatLng!.longitude, phone: _phoneController.text);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                              Text('Lưu', style: TextStyle(fontSize: 18)),
                             ],
                           ),
                           style: ElevatedButton.styleFrom(
@@ -193,7 +163,7 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                              Text('Lưu', style: TextStyle(fontSize: 18)),
                             ],
                           ),
                           style: ElevatedButton.styleFrom(
@@ -213,7 +183,7 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
 }
 
 class ProcessingPopup extends StatelessWidget {
-  final CreateBranchState state;
+  final UpdateBranchState state;
   const ProcessingPopup({
     Key? key,
     required this.state,
@@ -222,60 +192,80 @@ class ProcessingPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Container(
-        width: 150,
-        padding: const EdgeInsets.all(32.0),
-        child: Builder(builder: (context) {
-          if (state is CreateBranchLoadingState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-                Gap.k16.height,
-                Text('Đang xử lý, vui lòng chờ.')
-              ],
-            );
-          }
-          if (state is CreateBranchSuccessState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Tạo chi nhánh thành công'),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacementNamed(BranchsScreen.routeName);
-                    },
-                    child: Text(
-                      'Đóng',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+        child: state is UpdateBranchLoadingState
+            ? Container(
+                width: 150,
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    Gap.k16.height,
+                    Text('Đang xử lý, vui lòng chờ.')
+                  ],
+                ))
+            : state is UpdateBranchSuccessState
+                ? Container(
+                    width: 150,
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Cập nhật chi nhánh thành công'),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacementNamed(BranchsScreen.routeName);
+                            },
+                            child: Text(
+                              'Đóng',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))
+                      ],
                     ))
-              ],
-            );
-          }
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text('Đã xãy ra sự cố, hãy thử lại'),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Đóng',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ))
-            ],
-          );
-        }),
-      ),
-    );
+                : state is UpdateBranchFailedState
+                    ? Container(
+                        width: 150,
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              (state as UpdateBranchFailedState).msg.replaceAll('Exception: ', ''),
+                              textAlign: TextAlign.center,
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Đóng'))
+                          ],
+                        ),
+                      )
+                    : Container(
+                        height: 150,
+                        width: 150,
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text('Đã xãy ra sự cố, hãy thử lại'),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Đóng',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ))
+                          ],
+                        ),
+                      ));
   }
 }

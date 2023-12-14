@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BranchsCubit extends Cubit<BranchsState> {
   final BranchRepo _branchRepo = getIt<BranchRepo>();
-  BranchsCubit() :super(BranchsInitialState());
+  BranchsCubit() : super(BranchsInitialState());
 
   Future<void> getBranchsOfOwner() async {
     try {
@@ -17,7 +17,7 @@ class BranchsCubit extends Cubit<BranchsState> {
     }
   }
 
-  void refresh(){
+  void refresh() {
     emit(BranchsLoadingState());
     getBranchsOfOwner();
   }
@@ -26,7 +26,7 @@ class BranchsCubit extends Cubit<BranchsState> {
 //Create branch
 class CreateBranchCubit extends Cubit<CreateBranchState> {
   final BranchRepo _branchRepo = getIt<BranchRepo>();
-  CreateBranchCubit():super(CreateBranchState());
+  CreateBranchCubit() : super(CreateBranchState());
 
   Future<void> createBranch(String address, double lat, double lng, String phone) async {
     try {
@@ -35,6 +35,22 @@ class CreateBranchCubit extends Cubit<CreateBranchState> {
       emit(CreateBranchSuccessState(statusCode: statusCode));
     } on Exception catch (e) {
       emit(CreateBranchFailedState(msg: e.toString()));
+    }
+  }
+}
+
+//Create branch
+class UpdateBranchCubit extends Cubit<UpdateBranchState> {
+  final BranchRepo _branchRepo = getIt<BranchRepo>();
+  UpdateBranchCubit() : super(UpdateBranchState());
+
+  Future<void> updateBranch({required String branchId, String? address, double? lat, double? lng, String? phone}) async {
+    try {
+      emit(UpdateBranchLoadingState());
+      final statusCode = await _branchRepo.updateBranch(branchId: branchId, address: address, latitude: lat, longitude: lng, phone: phone);
+      emit(UpdateBranchSuccessState(statusCode: statusCode));
+    } on Exception catch (e) {
+      emit(UpdateBranchFailedState(msg: e.toString()));
     }
   }
 }

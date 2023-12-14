@@ -52,123 +52,131 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> {
       appBar: MyAppBar(
         title: ' Tạo cửa hàng',
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          _storeName = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        filled: true,
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Tên cửa hàng*',
-                        hintText: 'Nhập tên cửa hàng',
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 220,
-                      color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                      child: _imageFile == null
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.file_upload_outlined, color: Colors.grey),
-                                SizedBox(height: 8),
-                                Text('Tải lên ảnh đại diện cho cửa hàng*', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
-                                // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
-                              ],
-                            )
-                          : Image.file(_imageFile!, fit: BoxFit.cover,),
-                    ).onTap(() {
-                      // _pickImage(ImageSource.gallery);
-                      _getImage(context);
-                    }),
-                  ),
-                  Gap.k16.height,
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: TextField(
-                      maxLines: null,
-                      onChanged: (value) {
-                        setState(() {
-                          _description = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        filled: true,
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Mô tả về cửa hàng của bạn*',
-                        hintText: 'Nhập mô tả cửa hàng',
-                      ),
-                    ),
-                  ),
-                  Gap.k16.height,
-                  Text('(*): Bắt buộc nhập', style: TextStyle(color: grey),)
-                ],
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-                child: (_storeName != '' && _imageFile != null && _description != '' && !(MediaQuery.of(context).viewInsets.bottom > 0))
-                    ? ElevatedButton(
-                        onPressed: () async {
-                          await createStoreCubit.createStore(
-                            _storeName,
-                            _imageFile!,
-                            _description
-                          );
-                          showDialog(
+      body: BlocListener<CreateStoreCubit, CreateStoreState>(
+        listener: (context, state) {
+          if (!(state is CreateStoreLoadingState)) {
+            Navigator.pop(context);
+          }
+           showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return ProcessingPopup(
-                                  state: createStoreCubit.state,
+                                  state: state,
                                 );
                               });
+        },
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            _storeName = value;
+                          });
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Tạo', style: TextStyle(fontSize: 18)),
-                          ],
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                          filled: true,
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey),
+                          labelText: 'Tên cửa hàng*',
+                          hintText: 'Nhập tên cửa hàng',
                         ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.orange.shade600,
-                          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 220,
+                        color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                        child: _imageFile == null
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.file_upload_outlined, color: Colors.grey),
+                                  SizedBox(height: 8),
+                                  Text('Tải lên ảnh đại diện cho cửa hàng*', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
+                                  // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
+                                ],
+                              )
+                            : Image.file(_imageFile!, fit: BoxFit.cover,),
+                      ).onTap(() {
+                        // _pickImage(ImageSource.gallery);
+                        _getImage(context);
+                      }),
+                    ),
+                    Gap.k16.height,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: TextField(
+                        maxLines: null,
+                        onChanged: (value) {
+                          setState(() {
+                            _description = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                          filled: true,
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey),
+                          labelText: 'Mô tả về cửa hàng của bạn*',
+                          hintText: 'Nhập mô tả cửa hàng',
                         ),
-                      )
-                    : SizedBox.shrink(),
+                      ),
+                    ),
+                    Gap.k16.height,
+                    Text('(*): Bắt buộc nhập', style: TextStyle(color: grey),)
+                  ],
+                ),
               ),
-            ],
-          ),
-        ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                  child: (_storeName != '' && _imageFile != null && _description != '' && !(MediaQuery.of(context).viewInsets.bottom > 0))
+                      ? ElevatedButton(
+                          onPressed: () async {
+                            await createStoreCubit.createStore(
+                              _storeName,
+                              _imageFile!,
+                              _description
+                            );
+                           
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange.shade600,
+                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -185,12 +193,13 @@ class ProcessingPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        height: 150,
         width: 150,
         padding: const EdgeInsets.all(32.0),
         child: Builder(builder: (context) {
           if (state is CreateStoreLoadingState) {
             return Column(
+                      mainAxisSize: MainAxisSize.min,
+
               children: [
                 Center(
                   child: CircularProgressIndicator(),
@@ -202,6 +211,8 @@ class ProcessingPopup extends StatelessWidget {
           }
           if (state is CreateStoreSuccessState) {
             return Column(
+                      mainAxisSize: MainAxisSize.min,
+
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -218,6 +229,8 @@ class ProcessingPopup extends StatelessWidget {
             );
           }
           return Column(
+                      mainAxisSize: MainAxisSize.min,
+
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

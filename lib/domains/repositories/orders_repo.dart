@@ -9,12 +9,21 @@ class OrdersRepo {
 
   Future<Orders> getOrdersList({required String storeId, String? status, bool? isPayment}) async {
     try {
-      var res = await _apiClient.get('/api/orders/store/$storeId', queryParameters: {'status' : status, 'isPayment' : isPayment});
+      var res = await _apiClient.get('/api/orders/store/$storeId', queryParameters: {'status': status, 'isPayment': isPayment});
       return Orders.fromJson(res.data);
-    } on DioException catch (e){
+    } on DioException catch (e) {
       print(e);
       throw Exception(msg_server_error);
     }
   }
 
+  Future<Order> getOrderById({required String orderId}) async {
+    try {
+      var res = await _apiClient.get('/api/orders/$orderId');
+      return Order.fromJson(res.data);
+    } on DioException catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
 }

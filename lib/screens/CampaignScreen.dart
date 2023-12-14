@@ -55,74 +55,81 @@ class CampaignScreen extends StatelessWidget {
                   ).then((value) async {
                     if (value != null && value) {
                       await deleteCampaignCubit.deleteCampaign(campaignId: campaign.id!);
-                      showDialog(
-                          context: context,
-                          builder: (context) => ProcessingPopup(
-                                state: deleteCampaignCubit.state,
-                              ));
                     }
                   });
                 },
                 icon: Icon(Icons.delete_outline))
           ],
         ),
-        body: Stack(children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: FadeInImage.assetNetwork(
-                      image: campaign.thumbnailUrl.toString(), placeholder: 'image/appetit/placeholder.png', width: MediaQuery.of(context).size.width, height: 250, fit: BoxFit.cover),
-                ),
-                Gap.k16.height,
-                Text(
-                  'Chi nhánh',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Gap.k8.height,
-                Text(
-                  campaign.branch!.address.toString(),
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Gap.k16.height,
-                Text(
-                  'Ngày tạo',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Gap.k8.height,
-                Text(
-                  DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.createAt.toString())),
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Gap.k16.height,
-                Text(
-                  'Ngày bắt đầu',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Gap.k8.height,
-                Text(
-                  DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.startTime.toString())),
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Gap.k16.height,
-                Text(
-                  'Ngày kết thúc',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Gap.k8.height,
-                Text(
-                  DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.endTime.toString())),
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Gap.kSection.height,
-              ],
-            ),
-          )
-        ]));
+        body: BlocListener<DeleteCampaignCubit, DeleteCampaignState>(
+          listener: (context, state) {
+            if (!(state is DeleteCampaignLoadingState)) {
+              Navigator.pop(context);
+            }
+            showDialog(
+                context: context,
+                builder: (context) => ProcessingPopup(
+                      state: state,
+                    ));
+          },
+          child: Stack(children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: FadeInImage.assetNetwork(
+                        image: campaign.thumbnailUrl.toString(), placeholder: 'image/appetit/placeholder.png', width: MediaQuery.of(context).size.width, height: 250, fit: BoxFit.cover),
+                  ),
+                  Gap.k16.height,
+                  Text(
+                    'Chi nhánh',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Gap.k8.height,
+                  Text(
+                    campaign.branch!.address.toString(),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Gap.k16.height,
+                  Text(
+                    'Ngày tạo',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Gap.k8.height,
+                  Text(
+                    DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.createAt.toString())),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Gap.k16.height,
+                  Text(
+                    'Ngày bắt đầu',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Gap.k8.height,
+                  Text(
+                    DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.startTime.toString())),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Gap.k16.height,
+                  Text(
+                    'Ngày kết thúc',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Gap.k8.height,
+                  Text(
+                    DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.endTime.toString())),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Gap.kSection.height,
+                ],
+              ),
+            )
+          ]),
+        ));
   }
 }
 
@@ -138,10 +145,10 @@ class ProcessingPopup extends StatelessWidget {
     return state is DeleteCampaignLoadingState
         ? Dialog(
             child: Container(
-                height: 150,
                 width: 150,
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Center(
                       child: CircularProgressIndicator(),
@@ -154,10 +161,10 @@ class ProcessingPopup extends StatelessWidget {
         : state is DeleteCampaignSuccessState
             ? Dialog(
                 child: Container(
-                    height: 150,
                     width: 150,
                     padding: const EdgeInsets.all(32.0),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text('Xóa chiến dịch thành công'),
                         TextButton(
@@ -176,10 +183,10 @@ class ProcessingPopup extends StatelessWidget {
             : state is DeleteCampaignFailedState
                 ? Dialog(
                     child: Container(
-                      height: 150,
                       width: 150,
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -198,10 +205,10 @@ class ProcessingPopup extends StatelessWidget {
                   )
                 : Dialog(
                     child: Container(
-                      height: 150,
                       width: 150,
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

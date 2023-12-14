@@ -13,7 +13,7 @@ class NotificationCubit extends Cubit<NotificationState> {
     try {
       emit(NotificationLoadingState());
       var notifications = await _notificationRepo.getNotifications();
-      setValue(AppConstant.NOTI_COUNT, notifications.notifications!.length);
+      await setValue(AppConstant.NOTI_COUNT, notifications.notifications!.where((noti) => noti.isRead == false).length );
       emit(NotificationSuccessState(notifications: notifications));
     } on Exception catch (e) {
       emit(NotificationFaildState(msg: e.toString()));

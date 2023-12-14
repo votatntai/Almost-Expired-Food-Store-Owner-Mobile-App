@@ -70,7 +70,7 @@ class _UpdateCampaignScreenState extends State<UpdateCampaignScreen> {
   void _selectEndTime(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedStartDate != null && !_selectedStartDate!.isBefore(DateTime.now())? _selectedStartDate!.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)),
+      initialDate: _selectedStartDate != null && !_selectedStartDate!.isBefore(DateTime.now()) ? _selectedStartDate!.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)),
       firstDate: _selectedStartDate != null && !_selectedStartDate!.isBefore(DateTime.now()) ? _selectedStartDate!.add(Duration(days: 1)) : DateTime.now().add(Duration(days: 1)),
       lastDate: DateTime(2101),
     );
@@ -90,168 +90,174 @@ class _UpdateCampaignScreenState extends State<UpdateCampaignScreen> {
       appBar: MyAppBar(
         title: ' Cập nhật chiến dịch',
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: TextField(
-                      controller: _campaignNameController,
-                      // onChanged: (value) {
-                      //   setState(() {
-                      //     _campaignName = value;
-                      //   });
-                      // },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        filled: true,
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Tên chiến dịch*',
-                        hintText: 'Nhập tên chiến dịch',
+      body: BlocListener<UpdateCampaignCubit, UpdateCampaignState>(
+        listener: (context, state) {
+          if (!(state is UpdateCampaignLoadingState)) {
+            Navigator.pop(context);
+          }
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ProcessingPopup(
+                  state: state,
+                );
+              });
+        },
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: TextField(
+                        controller: _campaignNameController,
+                        // onChanged: (value) {
+                        //   setState(() {
+                        //     _campaignName = value;
+                        //   });
+                        // },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                          filled: true,
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey),
+                          labelText: 'Tên chiến dịch*',
+                          hintText: 'Nhập tên chiến dịch',
+                        ),
                       ),
                     ),
-                  ),
-                  Gap.k16.height,
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: TextField(
-                      controller: _startTimeController,
-                      readOnly: true,
-                      onTap: () {
-                        _selectStartTime(context); // Show the date picker when the text field is tapped
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        filled: true,
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Ngày bắt đầu*',
-                        hintText: 'Chọn ngày bắt đầu',
+                    Gap.k16.height,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: TextField(
+                        controller: _startTimeController,
+                        readOnly: true,
+                        onTap: () {
+                          _selectStartTime(context); // Show the date picker when the text field is tapped
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                          filled: true,
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey),
+                          labelText: 'Ngày bắt đầu*',
+                          hintText: 'Chọn ngày bắt đầu',
+                        ),
                       ),
                     ),
-                  ),
-                  Gap.k16.height,
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: TextField(
-                      controller: _endTimeController,
-                      readOnly: true,
-                      onTap: () {
-                        _selectEndTime(context); // Show the date picker when the text field is tapped
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        filled: true,
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Ngày kết thúc*',
-                        hintText: 'Chọn ngày kết thúc',
+                    Gap.k16.height,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: TextField(
+                        controller: _endTimeController,
+                        readOnly: true,
+                        onTap: () {
+                          _selectEndTime(context); // Show the date picker when the text field is tapped
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                          filled: true,
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey),
+                          labelText: 'Ngày kết thúc*',
+                          hintText: 'Chọn ngày kết thúc',
+                        ),
                       ),
                     ),
-                  ),
-                  Gap.k16.height,
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: DropdownButtonFormField<String>(
-                      value: _statusSelected,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                        border: InputBorder.none,
-                        fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, // Change this to the color you want
-                        filled: true,
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelText: 'Trạng thái*',
-                        hintText: 'Chọn trạng thái*',
+                    Gap.k16.height,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: DropdownButtonFormField<String>(
+                        value: _statusSelected,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                          border: InputBorder.none,
+                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, // Change this to the color you want
+                          filled: true,
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey),
+                          labelText: 'Trạng thái*',
+                          hintText: 'Chọn trạng thái*',
+                        ),
+                        // value: selectedBranch,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _statusSelected = newValue!;
+                          });
+                        },
+                        items: _status.map<DropdownMenuItem<String>>((String status) {
+                          return DropdownMenuItem<String>(
+                            value: status,
+                            child: Text(status),
+                          );
+                        }).toList(),
                       ),
-                      // value: selectedBranch,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _statusSelected = newValue!;
-                        });
-                      },
-                      items: _status.map<DropdownMenuItem<String>>((String status) {
-                        return DropdownMenuItem<String>(
-                          value: status,
-                          child: Text(status),
-                        );
-                      }).toList(),
                     ),
-                  ),
-                  Gap.k16.height,
-                  Text(
-                    '(*): Bắt buộc nhập',
-                    style: TextStyle(color: grey),
-                  ),
-                ],
+                    Gap.k16.height,
+                    Text(
+                      '(*): Bắt buộc nhập',
+                      style: TextStyle(color: grey),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-                child: (_campaignNameController.text != '')
-                    ? ElevatedButton(
-                        onPressed: () async {
-                          await updateCampaignCubit.updateCampaign(
-                              campaignId: widget.campaign.id!,
-                              campaign: UpdateCampaign(
-                                  name: _campaignNameController.text,
-                                  startTime: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_startTimeController.text).toString()).toString(),
-                                  endTime: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_endTimeController.text).toString()).toString(),
-                                  status: _statusSelected));
-
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return ProcessingPopup(
-                                  state: updateCampaignCubit.state,
-                                );
-                              });
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Lưu', style: TextStyle(fontSize: 18)),
-                          ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                  child: (_campaignNameController.text != '')
+                      ? ElevatedButton(
+                          onPressed: () async {
+                            await updateCampaignCubit.updateCampaign(
+                                campaignId: widget.campaign.id!,
+                                campaign: UpdateCampaign(
+                                    name: _campaignNameController.text,
+                                    startTime: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_startTimeController.text).toString()).toString(),
+                                    endTime: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_endTimeController.text).toString()).toString(),
+                                    status: _statusSelected));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Lưu', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange.shade600,
+                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          ),
+                        )
+                      : ElevatedButton(
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Lưu', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.grey.shade400,
+                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.orange.shade600,
-                          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                        ),
-                      )
-                    : ElevatedButton(
-                        onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Lưu', style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.grey.shade400,
-                          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                        ),
-                      ),
-              ),
-            ],
-          ),
-        ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -269,10 +275,10 @@ class ProcessingPopup extends StatelessWidget {
     return state is UpdateCampaignLoadingState
         ? Dialog(
             child: Container(
-                height: 150,
                 width: 150,
                 padding: const EdgeInsets.all(32.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Center(
                       child: CircularProgressIndicator(),
@@ -285,10 +291,10 @@ class ProcessingPopup extends StatelessWidget {
         : state is UpdateCampaignSuccessState
             ? Dialog(
                 child: Container(
-                    height: 150,
                     width: 150,
                     padding: const EdgeInsets.all(32.0),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text('Cập nhật chiến dịch thành công'),
                         TextButton(
@@ -307,10 +313,10 @@ class ProcessingPopup extends StatelessWidget {
             : state is UpdateCampaignFailedState
                 ? Dialog(
                     child: Container(
-                      height: 150,
                       width: 150,
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -329,10 +335,10 @@ class ProcessingPopup extends StatelessWidget {
                   )
                 : Dialog(
                     child: Container(
-                      height: 150,
                       width: 150,
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

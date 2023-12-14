@@ -29,8 +29,7 @@ class UserRepo{
 
   Future<void> sendDeviceToken() async {
     try {
-      var res = await apiClient.post('/api/device-tokens/store-owners', data: {'deviceToken' : deviceToken});
-      print(res.data);
+      await apiClient.post('/api/device-tokens/store-owners', data: {'deviceToken' : deviceToken});
     } on DioException catch (e) {
       print(e);
       throw Exception(e);

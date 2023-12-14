@@ -149,414 +149,417 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         appBar: MyAppBar(
           title: 'Tạo sản phẩm',
         ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: TextField(
-                        controller: _productName,
-                        // onChanged: (value) {
-                        //   setState(() {});
-                        // },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                          filled: true,
-                          labelStyle: TextStyle(color: Colors.grey),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          labelText: 'Tên sản phẩm*',
-                          hintText: 'Nhập tên sản phẩm',
+        body: BlocListener<CreateProductCubit, CreateProductState>(
+          listener: (context, state) {
+            if (!(state is CreateProductLoadingState)) {
+              Navigator.pop(context);
+            }
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ProcessingPopup(
+                    state: state,
+                  );
+                });
+          },
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: TextField(
+                          controller: _productName,
+                          // onChanged: (value) {
+                          //   setState(() {});
+                          // },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                            filled: true,
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            labelText: 'Tên sản phẩm*',
+                            hintText: 'Nhập tên sản phẩm',
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 220,
-                        color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        child: _imageFile == null
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.file_upload_outlined, color: Colors.grey),
-                                  SizedBox(height: 8),
-                                  Text('Tải lên ảnh của sản phẩm*', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
-                                  // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
-                                ],
-                              )
-                            : Image.file(
-                                _imageFile!,
-                                fit: BoxFit.cover,
-                              ),
-                      ).onTap(() {
-                        _getImage(context);
-                      }),
-                    ),
-                    Gap.k16.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: TextField(
-                              onChanged: (value) => comparePriceAndProPrice(),
-                              controller: _productPrice,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                                filled: true,
-                                labelStyle: TextStyle(color: Colors.grey),
-                                hintStyle: TextStyle(color: Colors.grey),
-                                labelText: 'Giá (₫)*',
-                                hintText: 'Nhập giá sản phẩm',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Gap.k16.width,
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: TextField(
-                              onChanged: (value) => comparePriceAndProPrice(),
-                              controller: _productPromotionalPrice,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                                filled: true,
-                                labelStyle: TextStyle(color: Colors.grey),
-                                hintStyle: TextStyle(color: Colors.grey),
-                                labelText: 'Giá giảm (₫)*',
-                                hintText: 'Nhập giá giảm',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Gap.k16.height,
-                    _isValidProPrice
-                        ? SizedBox.shrink()
-                        : Column(
-                            children: [
-                              Text(
-                                'Giá khuyến mãi phải thấp hơn giá niêm yết.',
-                                style: TextStyle(fontSize: 12, color: Colors.red),
-                              ),
-                              Gap.k16.height
-                            ],
-                          ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: TextField(
-                        controller: _productQuantity,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                          filled: true,
-                          labelStyle: TextStyle(color: Colors.grey),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          labelText: 'Số lượng*',
-                          hintText: 'Nhập số lượng sản phẩm',
-                        ),
-                      ),
-                    ),
-                    Gap.k16.height,
-                    BlocProvider<CategoriesCubit>(
-                      create: (context) => CategoriesCubit(),
-                      child: BlocBuilder<CategoriesCubit, CategoriesState>(builder: (context, state) {
-                        if (state is CategoriesLoadingState) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                                filled: true,
-                                labelStyle: TextStyle(color: Colors.grey),
-                                hintStyle: TextStyle(color: Colors.grey),
-                                labelText: 'Loại*',
-                                hintText: 'Chọn thể loại',
-                              ),
-                              onChanged: (value) {},
-                              items: [],
-                            ),
-                          );
-                        }
-                        if (state is CategoriesSuccessState) {
-                          var categories = state.categories.categories;
-                          categories!.forEach((element) => _isCheckCategory.add({element.id.toString(): false}));
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 16),
-                                height: 64,
-                                width: context.width(),
-                                decoration: BoxDecoration(
-                                  color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SizedBox(height: 16),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 220,
+                          color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                          child: _imageFile == null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _selectedCategories.isEmpty
-                                        ? Text(
-                                            'Chọn thể loại',
-                                            style: TextStyle(color: Colors.grey.shade500, fontSize: 16),
-                                          ).expand()
-                                        : SizedBox(
-                                            width: context.width() * 0.73,
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Wrap(
-                                                  children: _selectedCategories.map((item) {
-                                                return Chip(
-                                                  label: Text(item.name.toString()),
-                                                  onDeleted: () {
-                                                    setState(() {
-                                                      _selectedCategories.remove(item);
-                                                    });
-                                                  },
-                                                ).paddingRight(8);
-                                              }).toList()),
-                                            ),
-                                          ),
-                                    Icon(
-                                      Icons.arrow_drop_down,
-                                      color: grey,
-                                    )
+                                    Icon(Icons.file_upload_outlined, color: Colors.grey),
+                                    SizedBox(height: 8),
+                                    Text('Tải lên ảnh của sản phẩm*', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
+                                    // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
                                   ],
+                                )
+                              : Image.file(
+                                  _imageFile!,
+                                  fit: BoxFit.cover,
                                 ),
-                              ).onTap(() {
-                                setState(() {
-                                  _isShowCategoryList = !_isShowCategoryList;
-                                });
-                              }),
-                              _isShowCategoryList
-                                  ? Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: white,
-                                      border: Border.all(width: 1),
-                                      borderRadius: BorderRadius.circular(8)
-                                    ),
-                                      height: 100,
-                                      width: 100,
-                                      child: ListView.separated(
-                                          scrollDirection: Axis.vertical,
-                                          itemBuilder: (context, index) {
-                                            return Text(categories[index].name.toString()).onTap(() {
-                                              if (_selectedCategories.any((element) => element.id == categories[index].id)) {
-                                                setState(() {
-                                                  _selectedCategories.remove(categories[index]);
-                                                  _isCheckCategory[index][categories[index].id.toString()] = false;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _isCheckCategory[index][categories[index].id.toString()] = true;
-                                                  _selectedCategories.add(categories[index]);
-                                                });
-                                              }
-                                            });
-                                          },
-                                          separatorBuilder: (context, index) => Divider(),
-                                          itemCount: categories.length),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          );
-                        }
-                        return Text('Sự cố tải lên thể loại');
-                      }),
-                    ),
-                    Gap.k16.height,
-                    BlocBuilder<CampaignsCubit, CampaignsState>(builder: (context, campaignState) {
-                      if (campaignState is CampaignsLoadingState) {
-                        return SizedBox.shrink();
-                      }
-                      if (campaignState is CampaignsSuccessState) {
-                        if (campaignState.campaigns.campaign!.isNotEmpty) {
-                          var campaigns = campaignState.campaigns.campaign;
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: DropdownButtonFormField<Campaign>(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                border: InputBorder.none,
-                                fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, // Change this to the color you want
-                                filled: true,
-                                hintStyle: TextStyle(color: Colors.grey),
-                                hintText: 'Chọn chiến dịch',
+                        ).onTap(() {
+                          _getImage(context);
+                        }),
+                      ),
+                      Gap.k16.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: TextField(
+                                onChanged: (value) => comparePriceAndProPrice(),
+                                controller: _productPrice,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                                  filled: true,
+                                  labelStyle: TextStyle(color: Colors.grey),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  labelText: 'Giá (₫)*',
+                                  hintText: 'Nhập giá sản phẩm',
+                                ),
                               ),
-                              // value: selectedBranch,
-                              onChanged: (Campaign? newValue) {
-                                setState(() {
-                                  _selectedCampaign = newValue!;
-                                });
-                              },
-                              items: campaigns!.map<DropdownMenuItem<Campaign>>((Campaign campaign) {
-                                return DropdownMenuItem<Campaign>(
-                                  value: campaign,
-                                  child: Text(campaign.name.toString()),
-                                );
-                              }).toList(),
                             ),
-                          );
-                        } else {
-                          return CreateNew(routeName: CreateCampaignScreen.routeName, title: 'Cửa hàng hiện chưa có chiến dịch.', text: 'Tạo chiến dịch');
+                          ),
+                          Gap.k16.width,
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: TextField(
+                                onChanged: (value) => comparePriceAndProPrice(),
+                                controller: _productPromotionalPrice,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                                  filled: true,
+                                  labelStyle: TextStyle(color: Colors.grey),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  labelText: 'Giá giảm (₫)*',
+                                  hintText: 'Nhập giá giảm',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Gap.k16.height,
+                      _isValidProPrice
+                          ? SizedBox.shrink()
+                          : Column(
+                              children: [
+                                Text(
+                                  'Giá khuyến mãi phải thấp hơn giá niêm yết.',
+                                  style: TextStyle(fontSize: 12, color: Colors.red),
+                                ),
+                                Gap.k16.height
+                              ],
+                            ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: TextField(
+                          controller: _productQuantity,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                            filled: true,
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            labelText: 'Số lượng*',
+                            hintText: 'Nhập số lượng sản phẩm',
+                          ),
+                        ),
+                      ),
+                      Gap.k16.height,
+                      BlocProvider<CategoriesCubit>(
+                        create: (context) => CategoriesCubit(),
+                        child: BlocBuilder<CategoriesCubit, CategoriesState>(builder: (context, state) {
+                          if (state is CategoriesLoadingState) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                                  filled: true,
+                                  labelStyle: TextStyle(color: Colors.grey),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  labelText: 'Loại*',
+                                  hintText: 'Chọn thể loại',
+                                ),
+                                onChanged: (value) {},
+                                items: [],
+                              ),
+                            );
+                          }
+                          if (state is CategoriesSuccessState) {
+                            var categories = state.categories.categories;
+                            categories!.forEach((element) => _isCheckCategory.add({element.id.toString(): false}));
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 16),
+                                  height: 64,
+                                  width: context.width(),
+                                  decoration: BoxDecoration(
+                                    color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _selectedCategories.isEmpty
+                                          ? Text(
+                                              'Chọn thể loại',
+                                              style: TextStyle(color: Colors.grey.shade500, fontSize: 16),
+                                            ).expand()
+                                          : SizedBox(
+                                              width: context.width() * 0.73,
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Wrap(
+                                                    children: _selectedCategories.map((item) {
+                                                  return Chip(
+                                                    label: Text(item.name.toString()),
+                                                    onDeleted: () {
+                                                      setState(() {
+                                                        _selectedCategories.remove(item);
+                                                      });
+                                                    },
+                                                  ).paddingRight(8);
+                                                }).toList()),
+                                              ),
+                                            ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        color: grey,
+                                      )
+                                    ],
+                                  ),
+                                ).onTap(() {
+                                  setState(() {
+                                    _isShowCategoryList = !_isShowCategoryList;
+                                  });
+                                }),
+                                _isShowCategoryList
+                                    ? Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(color: white, border: Border.all(width: 1), borderRadius: BorderRadius.circular(8)),
+                                        height: 100,
+                                        width: 100,
+                                        child: ListView.separated(
+                                            scrollDirection: Axis.vertical,
+                                            itemBuilder: (context, index) {
+                                              return Text(categories[index].name.toString()).onTap(() {
+                                                if (_selectedCategories.any((element) => element.id == categories[index].id)) {
+                                                  setState(() {
+                                                    _selectedCategories.remove(categories[index]);
+                                                    _isCheckCategory[index][categories[index].id.toString()] = false;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    _isCheckCategory[index][categories[index].id.toString()] = true;
+                                                    _selectedCategories.add(categories[index]);
+                                                  });
+                                                }
+                                              });
+                                            },
+                                            separatorBuilder: (context, index) => Divider(),
+                                            itemCount: categories.length),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            );
+                          }
+                          return Text('Sự cố tải lên thể loại');
+                        }),
+                      ),
+                      Gap.k16.height,
+                      BlocBuilder<CampaignsCubit, CampaignsState>(builder: (context, campaignState) {
+                        if (campaignState is CampaignsLoadingState) {
+                          return SizedBox.shrink();
                         }
-                      }
-                      return SizedBox.shrink();
-                    }),
-                    Gap.k16.height,
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: TextField(
-                        controller: _productDescription,
-                        maxLines: null,
-                        // onChanged: (value) {
-                        //   setState(() {
-                        //     _productDescription = value;
-                        //   });
-                        // },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                          filled: true,
-                          labelStyle: TextStyle(color: Colors.grey),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          labelText: 'Mô tả về sản phẩm*',
-                          hintText: 'Nhập mô tả sản phẩm',
+                        if (campaignState is CampaignsSuccessState) {
+                          if (campaignState.campaigns.campaign!.isNotEmpty) {
+                            var campaigns = campaignState.campaigns.campaign;
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: DropdownButtonFormField<Campaign>(
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                  border: InputBorder.none,
+                                  fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, // Change this to the color you want
+                                  filled: true,
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  hintText: 'Chọn chiến dịch',
+                                ),
+                                // value: selectedBranch,
+                                onChanged: (Campaign? newValue) {
+                                  setState(() {
+                                    _selectedCampaign = newValue!;
+                                  });
+                                },
+                                items: campaigns!.map<DropdownMenuItem<Campaign>>((Campaign campaign) {
+                                  return DropdownMenuItem<Campaign>(
+                                    value: campaign,
+                                    child: Text(campaign.name.toString()),
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          } else {
+                            return CreateNew(routeName: CreateCampaignScreen.routeName, title: 'Cửa hàng hiện chưa có chiến dịch.', text: 'Tạo chiến dịch');
+                          }
+                        }
+                        return SizedBox.shrink();
+                      }),
+                      Gap.k16.height,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: TextField(
+                          controller: _productDescription,
+                          maxLines: null,
+                          // onChanged: (value) {
+                          //   setState(() {
+                          //     _productDescription = value;
+                          //   });
+                          // },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                            filled: true,
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            labelText: 'Mô tả về sản phẩm*',
+                            hintText: 'Nhập mô tả sản phẩm',
+                          ),
                         ),
                       ),
-                    ),
-                    Gap.k16.height,
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: TextField(
-                        controller: _createAtController,
-                        readOnly: true,
-                        onTap: () {
-                          _selectCreateAt(context);
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                          filled: true,
-                          labelStyle: TextStyle(color: Colors.grey),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          labelText: 'Ngày sản xuất*',
-                          hintText: 'Chọn ngày sản xuất',
+                      Gap.k16.height,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: TextField(
+                          controller: _createAtController,
+                          readOnly: true,
+                          onTap: () {
+                            _selectCreateAt(context);
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                            filled: true,
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            labelText: 'Ngày sản xuất*',
+                            hintText: 'Chọn ngày sản xuất',
+                          ),
                         ),
                       ),
-                    ),
-                    Gap.k16.height,
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: TextField(
-                        controller: _expiredAtController,
-                        readOnly: true,
-                        onTap: () {
-                          _selectExpiredAt(context);
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                          filled: true,
-                          labelStyle: TextStyle(color: Colors.grey),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          labelText: 'Hạn sử dụng*',
-                          hintText: 'Chọn hạn sử dụng',
+                      Gap.k16.height,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: TextField(
+                          controller: _expiredAtController,
+                          readOnly: true,
+                          onTap: () {
+                            _selectExpiredAt(context);
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
+                            filled: true,
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            labelText: 'Hạn sử dụng*',
+                            hintText: 'Chọn hạn sử dụng',
+                          ),
                         ),
                       ),
-                    ),
-                    Gap.k16.height,
-                    Text(
-                      '(*): Bắt buộc nhập',
-                      style: TextStyle(color: grey),
-                    ),
-                    Gap.kSection.height,
-                    Gap.kSection.height,
-                  ],
+                      Gap.k16.height,
+                      Text(
+                        '(*): Bắt buộc nhập',
+                        style: TextStyle(color: grey),
+                      ),
+                      Gap.kSection.height,
+                      Gap.kSection.height,
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-                  child: (_productName.text != '' && _productDescription.text != '' && _imageFile != null && _isValidProPrice)
-                      ? ElevatedButton(
-                          onPressed: () async {
-                            await createProductCubit.createProduct(
-                                product: CreateProduct(
-                              campaignId: _selectedCampaign.id.toString(),
-                              name: _productName.text,
-                              categoriesId: _selectedCategories,
-                              description: _productDescription.text,
-                              price: _productPrice.text.toInt(),
-                              status: 'Available',
-                              quantity: _productQuantity.text.toInt(),
-                              promotionalPrice: _productPromotionalPrice.text.toInt(),
-                              thumbnail: _imageFile!,
-                              createAt: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_createAtController.text).toString()).toString(),
-                              expiredAt: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_expiredAtController.text).toString()).toString(),
-                            ));
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return ProcessingPopup(
-                                    state: createProductCubit.state,
-                                  );
-                                });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
-                            ],
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                    child: (_productName.text != '' && _productDescription.text != '' && _imageFile != null && _isValidProPrice)
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              await createProductCubit.createProduct(
+                                  product: CreateProduct(
+                                campaignId: _selectedCampaign.id.toString(),
+                                name: _productName.text,
+                                categoriesId: _selectedCategories,
+                                description: _productDescription.text,
+                                price: _productPrice.text.toInt(),
+                                status: 'Available',
+                                quantity: _productQuantity.text.toInt(),
+                                promotionalPrice: _productPromotionalPrice.text.toInt(),
+                                thumbnail: _imageFile!,
+                                createAt: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_createAtController.text).toString()).toString(),
+                                expiredAt: DateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(DateFormat("dd/MM/yyyy").parse(_expiredAtController.text).toString()).toString(),
+                              ));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Tạo', style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.orange.shade600,
+                              padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                            ),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Tạo', style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.grey.shade400,
+                              padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                            ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.orange.shade600,
-                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                          ),
-                        )
-                      : ElevatedButton(
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.grey.shade400,
-                            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                          ),
-                        ),
-                ),
-              ],
-            ),
-          ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ));
   }
 }
@@ -572,12 +575,13 @@ class ProcessingPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        height: 150,
         width: 150,
         padding: const EdgeInsets.all(32.0),
         child: Builder(builder: (context) {
           if (state is CreateProductLoadingState) {
             return Column(
+                      mainAxisSize: MainAxisSize.min,
+
               children: [
                 Center(
                   child: CircularProgressIndicator(),
@@ -589,6 +593,8 @@ class ProcessingPopup extends StatelessWidget {
           }
           if (state is CreateProductSuccessState) {
             return Column(
+                      mainAxisSize: MainAxisSize.min,
+
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -607,6 +613,8 @@ class ProcessingPopup extends StatelessWidget {
             );
           }
           return Column(
+                      mainAxisSize: MainAxisSize.min,
+
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

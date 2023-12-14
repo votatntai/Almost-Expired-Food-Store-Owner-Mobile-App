@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../main.dart';
+import 'UpdateBranchScreen.dart';
 
 class BranchsScreen extends StatelessWidget {
   static const String routeName = '/branchs';
@@ -59,7 +60,9 @@ class BranchsScreen extends StatelessWidget {
                           Icon(
                             Icons.edit,
                             color: iconColorSecondary,
-                          )
+                          ).onTap((){
+                              Navigator.pushNamed(context, UpdateBranchScreen.routeName, arguments: branchs[index]);
+                          })
                         ],
                       ),
                     );

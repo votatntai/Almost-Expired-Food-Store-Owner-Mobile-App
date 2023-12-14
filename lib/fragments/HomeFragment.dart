@@ -48,9 +48,6 @@ class _HomeFragmentState extends State<HomeFragment> {
             }),
           ),
         ),
-        actions: [
-          Padding(padding: EdgeInsets.only(right: 8.0), child: Icon(Icons.search, size: 27, color: context.iconColor)),
-        ],
       ),
       body: BlocBuilder<StoresCubit, StoresState>(builder: (context, state) {
         if (state is StoresLoadingState) {

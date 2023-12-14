@@ -1,7 +1,6 @@
 import 'package:appetit/cubits/branch/branchs_cubit.dart';
 import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
 import 'package:appetit/cubits/notification/notification_cubit.dart';
-import 'package:appetit/cubits/notification/notification_state.dart';
 import 'package:appetit/cubits/profile/account_cubit.dart';
 import 'package:appetit/cubits/store/stores_cubit.dart';
 import 'package:appetit/fragments/HomeFragment.dart';
@@ -15,7 +14,8 @@ import 'package:nb_utils/nb_utils.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
-  DashboardScreen({Key? key}) : super(key: key);
+  final int? tabIndex;
+  DashboardScreen({Key? key, this.tabIndex}) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -24,17 +24,16 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int selectedItem = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.tabIndex != null) {
+      selectedItem = widget.tabIndex!;
+    }
+  }
+
   void onTapSelection(int index) {
-    // if (index == 1)
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => MultiBlocProvider(
-    //                 providers: [BlocProvider<AccountCubit>(create: (context) => AccountCubit()), BlocProvider(create: (context) => StoresCubit())],
-    //                 child: CreateCampaignScreen(),
-    //               )));
-    // else
-      setState(() => selectedItem = index);
+    setState(() => selectedItem = index);
   }
 
   List<Widget> widgetOption = <Widget>[
@@ -51,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         BlocProvider<AccountCubit>(create: (context) => AccountCubit()),
         BlocProvider<CreateCampaignCubit>(create: (context) => CreateCampaignCubit()),
         BlocProvider<BranchsCubit>(create: (context) => BranchsCubit()),
-         BlocProvider<NotificationCubit>(create: (context) {
+        BlocProvider<NotificationCubit>(create: (context) {
           final notificationCubit = NotificationCubit();
           notificationCubit.getNotifications();
           return notificationCubit;
@@ -72,18 +71,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           selectedItemColor: Colors.orangeAccent,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: StreamBuilder<int>(
-              stream: watchCountNotify(),
-              builder: (context, snapshot) {
-                int value = snapshot.data ?? 0;
+            BottomNavigationBarItem(
+                icon: StreamBuilder<int>(
+                    stream: watchCountNotify(),
+                    builder: (context, snapshot) {
+                      int value = snapshot.data ?? 0;
 
-                if (value > 0) {
-                // return Badge.count(count: state.notifications.notifications!.where((noti) => noti.isRead == false).length, child: Icon(Icons.notifications_outlined));
-                return Badge.count(count: getIntAsync(AppConstant.NOTI_COUNT), child: Icon(Icons.notifications_outlined));
-                }
-                return Icon(Icons.notifications_outlined);
-              }
-            ), label: 'Notification'),
+                      if (value > 0) {
+                        // return Badge.count(count: state.notifications.notifications!.where((noti) => noti.isRead == false).length, child: Icon(Icons.notifications_outlined));
+                        return Badge.count(count: getIntAsync(AppConstant.NOTI_COUNT), child: Icon(Icons.notifications_outlined));
+                      }
+                      return Icon(Icons.notifications_outlined);
+                    }),
+                label: 'Notification'),
             BottomNavigationBarItem(icon: Icon(Icons.person_outline_outlined), label: 'Profile'),
           ],
         ),

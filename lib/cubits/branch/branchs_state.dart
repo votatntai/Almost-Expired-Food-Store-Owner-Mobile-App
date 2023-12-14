@@ -30,3 +30,18 @@ class CreateBranchSuccessState extends CreateBranchState {
   final int statusCode;
   CreateBranchSuccessState({required this.statusCode});
 }
+
+//Update branch
+class UpdateBranchState {}
+
+class UpdateBranchLoadingState extends UpdateBranchState {}
+
+class UpdateBranchFailedState extends UpdateBranchState {
+  final String msg;
+  UpdateBranchFailedState({required this.msg});
+}
+
+class UpdateBranchSuccessState extends UpdateBranchState {
+  final int statusCode;
+  UpdateBranchSuccessState({required this.statusCode});
+}
