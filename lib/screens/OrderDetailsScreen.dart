@@ -51,7 +51,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                 children: [
                                   Text(orderDetails![index].product!.name.toString()),
                                   Text(
-                                    'Số lượng: ' + orderDetails![index].product!.quantity.toString(),
+                                    'Số lượng: ' + orderDetails![index].quantity.toString(),
                                     style: TextStyle(color: grey, fontSize: 12),
                                   ),
                                   Row(
