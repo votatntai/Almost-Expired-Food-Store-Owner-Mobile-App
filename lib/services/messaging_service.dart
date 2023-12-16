@@ -1,11 +1,11 @@
 import 'package:appetit/cubits/notification/notification_cubit.dart';
 import 'package:appetit/domains/repositories/user_repo.dart';
 import 'package:appetit/screens/OrdersWaitPaymentScreen.dart';
-import 'package:appetit/screens/OrdersWaitPickupScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../screens/OrderDetailsScreen.dart';
 import '../utils/Constants.dart';
 
 class MessagingService {
@@ -42,8 +42,8 @@ class MessagingService {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    _initLocalNotify();
-      showNotification(message.notification!.title!, message.notification!.body!);
+      _initLocalNotify();
+      showNotification(message.notification!.title!, message.notification!.body!, message.data['link']);
     });
   }
 
@@ -58,20 +58,13 @@ class MessagingService {
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
         print('payload at click noti event: ' + details.payload.toString());
-        NotificationCubit().getNotifications();
-        if (details.payload == 'Đơn hàng mới') {
-          navigatorKey.currentState?.pushNamed(OrdersWaitPaymentScreen.routeName);
-        }
-        if (details.payload == 'Thanh toán thành công') {
-          navigatorKey.currentState?.pushNamed(OrdersWaitPickupScreen.routeName);
-          
-        }
+        navigatorKey.currentState?.pushNamed(OrderDetailsScreen.routeName, arguments: details.payload);
       },
     );
 
-final value = getIntAsync(AppConstant.NOTI_COUNT);
-      setValue(AppConstant.NOTI_COUNT, value + 1);
-      print(getIntAsync(AppConstant.NOTI_COUNT).toString());
+    final value = getIntAsync(AppConstant.NOTI_COUNT);
+    setValue(AppConstant.NOTI_COUNT, value + 1);
+    print(getIntAsync(AppConstant.NOTI_COUNT).toString());
     // Xử lý trường hợp ứng dụng được mở thông qua một thông báo
     _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails().then((NotificationAppLaunchDetails? details) {
       if (details != null && details.didNotificationLaunchApp) {
@@ -79,7 +72,6 @@ final value = getIntAsync(AppConstant.NOTI_COUNT);
         if (payload != null) {
           debugPrint('notification payload: $payload');
           // Thực hiện các hành động khi người dùng nhấn vào thông báo tại đây.
-          
         }
       }
     });
@@ -93,17 +85,18 @@ final value = getIntAsync(AppConstant.NOTI_COUNT);
     String body = message.notification?.body ?? 'Default body';
 
     // Hiển thị thông báo khi có message tới
-    await showNotification(title, body);
+    await showNotification(title, body, message.data['link']);
   }
 
-  Future<void> showNotification(String title, String body) async {
+  Future<void> showNotification(String title, String body, String link) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', // ID kênh thông báo
-        'your channel name', // Tên kênh thông báo
-        importance: Importance.max,
-        playSound: true,
-        showProgress: true,
-        priority: Priority.high,);
+      'your channel id', // ID kênh thông báo
+      'your channel name', // Tên kênh thông báo
+      importance: Importance.max,
+      playSound: true,
+      showProgress: true,
+      priority: Priority.high,
+    );
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     await FlutterLocalNotificationsPlugin().show(
       0, // ID thông báo, thay đổi để hiển thị nhiều thông báo khác nhau
@@ -111,6 +104,6 @@ final value = getIntAsync(AppConstant.NOTI_COUNT);
       body,
       platformChannelSpecifics,
     );
-    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: title);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: link);
   }
 }

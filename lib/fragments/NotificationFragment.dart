@@ -49,8 +49,6 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Text("Recent", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                      // SizedBox(height: 16),
                       ListView.separated(
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
@@ -68,26 +66,6 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      // RichText(
-                                      //   text: TextSpan(
-                                      //     children: <TextSpan>[
-                                      //       TextSpan(
-                                      //         text: mynotifications[index].name.toString(),
-                                      //         style: TextStyle(
-                                      //           fontWeight: FontWeight.w700,
-                                      //           color: context.iconColor,
-                                      //         ),
-                                      //       ),
-                                      //       TextSpan(
-                                      //         text: mynotifications[index].message.toString(),
-                                      //         style: TextStyle(
-                                      //           fontWeight: FontWeight.w300,
-                                      //           color: context.iconColor,
-                                      //         ),
-                                      //       )
-                                      //     ],
-                                      //   ),
-                                      // ),
                                       Text(notifications[index].message!),
                                       SizedBox(height: 8),
                                       Text(
@@ -98,28 +76,16 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                                     ],
                                   ),
                                 ),
-                                // ClipRRect(
-                                //   borderRadius: BorderRadius.circular(10),
-                                //   child: Image.asset(mynotifications[index].recipeimage.toString(), height: 45, width: 45, fit: BoxFit.cover),
-                                // ),
                               ],
                             ),
                           ).onTap(() async {
                             await NotificationRepo().markAsRead(notificationId: notifications[index].id!);
                             setValue(AppConstant.NOTI_COUNT, notifications.length);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => OrderDetailsScreen(
-                                          orderId: notifications[index].link,
-                                        )));
-
-                            // if (notifications[index].title == 'Đơn hàng mới') {
-                            //   Navigator.pushNamed(context, OrdersWaitPaymentScreen.routeName);
-                            // }
-                            // if (notifications[index].title == 'Thanh toán thành công') {
-                            //   Navigator.pushNamed(context, OrdersWaitPickupScreen.routeName);
-                            // }
+                            Navigator.pushNamed(
+                              context,
+                              OrderDetailsScreen.routeName,
+                              arguments: notifications[index].id
+                            );
                           });
                         },
                       ),

@@ -22,11 +22,9 @@ import 'package:appetit/screens/UpdateCampaignScreen.dart';
 import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../cubits/order/orders_cubit.dart';
 import '../cubits/profile/account_cubit.dart';
 import '../domains/models/account.dart';
-import '../domains/models/orders.dart';
 import '../screens/CampaignsScreen.dart';
 import '../screens/OrdersCanceledScreen.dart';
 import '../screens/OrdersWaitPickupScreen.dart';
@@ -91,14 +89,10 @@ PageRoute? generateRoute(RouteSettings settings) {
               ));
     case OrdersCanceledScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<OrdersCubit>(create: (context) => OrdersCubit(), child: OrdersCanceledScreen()));
-    case OrderDetailsScreen.routeName:
-      Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
-      final orderDetails = arguments['orderDetails'] as List<OrderDetails>;
-      final amount = arguments['amount'] as int;
+     case OrderDetailsScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => OrderDetailsScreen(
-                orderDetails: orderDetails,
-                amout: amount,
+                orderId: settings.arguments as String,
               ));
     case ManageOrdersScreen.routeName:
       return MaterialPageRoute(builder: (_) => ManageOrdersScreen());
