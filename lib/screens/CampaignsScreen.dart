@@ -137,7 +137,7 @@ class _CampaignsScreenState extends State<CampaignsScreen> {
                               ).onTap(() => Navigator.pushNamed(
                                     context,
                                     CampaignScreen.routeName,
-                                    arguments: campaigns[index],
+                                    arguments: {'campaign' : campaigns[index], 'campaignId' : campaigns[index].id},
                                   ));
                             }
                             return SizedBox.shrink();

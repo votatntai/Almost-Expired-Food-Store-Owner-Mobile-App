@@ -1,6 +1,7 @@
 import 'package:appetit/cubits/branch/branchs_cubit.dart';
 import 'package:appetit/cubits/branch/branchs_state.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
+import 'package:appetit/utils/format_utils.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,7 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
   Set<Marker> _markers = {};
   TextEditingController _searchPlaceController = TextEditingController();
   late LocationResult _locationResult;
+  bool _phoneValidate = true;
 
   @override
   void initState() {
@@ -142,8 +144,11 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: TextField(
+                      onChanged: (value) => setState(() {
+                        _phoneValidate = FormatUtils.phoneValidate(value);
+                        print(FormatUtils.phoneValidate(value));
+                      }),
                       keyboardType: TextInputType.phone,
-                      maxLines: null,
                       controller: _phoneController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -156,6 +161,17 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
                       ),
                     ),
                   ),
+                  !_phoneValidate && _phoneController.text != ''
+                      ? Column(
+                          children: [
+                            Gap.k4.height,
+                            Text(
+                              'Số điện thoại gồm 10 số và các đầu số hợp lệ: 03, 05, 07, 08, 09',
+                              style: TextStyle(color: redColor, fontSize: 10),
+                            )
+                          ],
+                        )
+                      : SizedBox.shrink(),
                   SizedBox(height: 16),
                   Gap.k16.height,
                   Text(
@@ -171,7 +187,7 @@ class _CreateBranchScreenState extends State<CreateBranchScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: (_addressController.text != '' && _phoneController.text != '' && _selectedLatLng != null)
+                  child: (_addressController.text != '' && _phoneController.text != '' && _selectedLatLng != null && _phoneValidate == true)
                       ? ElevatedButton(
                           onPressed: () async {
                             await createBranchCubit.createBranch(_addressController.text, _selectedLatLng!.latitude, _selectedLatLng!.longitude, _phoneController.text);

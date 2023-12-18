@@ -2,6 +2,7 @@ import 'package:appetit/cubits/branch/branchs_cubit.dart';
 import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
 import 'package:appetit/cubits/product/products_cubit.dart';
 import 'package:appetit/cubits/store/stores_cubit.dart';
+import 'package:appetit/cubits/wallet/wallet_cubit.dart';
 import 'package:appetit/domains/models/branchs.dart';
 import 'package:appetit/domains/models/campaign/campaigns.dart';
 import 'package:appetit/domains/repositories/stores_repo.dart';
@@ -19,6 +20,7 @@ import 'package:appetit/screens/OrdersWaitPaymentScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/screens/UpdateBranchScreen.dart';
 import 'package:appetit/screens/UpdateCampaignScreen.dart';
+import 'package:appetit/screens/WalletScreen.dart';
 import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,13 +53,13 @@ PageRoute? generateRoute(RouteSettings settings) {
                 )
               ], child: CreateCampaignScreen()));
     case CampaignScreen.routeName:
+      Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
+      var campaignId = arguments['campaignId'] as String;
+      var campaign = arguments['campaign'] as Campaign;
       return MaterialPageRoute(
-          builder: (_) => BlocProvider<DeleteCampaignCubit>(
-                create: (context) => DeleteCampaignCubit(),
-                child: CampaignScreen(
-                  campaign: settings.arguments as Campaign,
-                ),
-              ));
+          builder: (_) => MultiBlocProvider(
+              providers: [BlocProvider<DeleteCampaignCubit>(create: (context) => DeleteCampaignCubit()), BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(campaignId: campaignId))],
+              child: CampaignScreen(campaign: campaign)));
     case CampaignsScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit(), child: CampaignsScreen()));
     case ProductsScreen.routeName:
@@ -89,7 +91,7 @@ PageRoute? generateRoute(RouteSettings settings) {
               ));
     case OrdersCanceledScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<OrdersCubit>(create: (context) => OrdersCubit(), child: OrdersCanceledScreen()));
-     case OrderDetailsScreen.routeName:
+    case OrderDetailsScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => OrderDetailsScreen(
                 orderId: settings.arguments as String,
@@ -118,6 +120,13 @@ PageRoute? generateRoute(RouteSettings settings) {
                   branch: settings.arguments as Branch,
                 ),
               ));
+    case WalletScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(providers: [
+                BlocProvider<WalletCubit>(create: (context) => WalletCubit(storeId: StoresRepo.storeId)),
+                BlocProvider<UpdateWalletCubit>(create: (context) => UpdateWalletCubit()),
+                BlocProvider<WithdrawRequestCubit>(create: (context) => WithdrawRequestCubit())
+              ], child: WalletScreen()));
     default:
   }
   return null;

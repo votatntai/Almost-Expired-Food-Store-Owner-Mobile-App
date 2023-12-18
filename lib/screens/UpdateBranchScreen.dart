@@ -13,6 +13,7 @@ import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/widgets/place_picker.dart';
 import '../main.dart';
 import '../utils/Colors.dart';
+import '../utils/format_utils.dart';
 import '../utils/gap.dart';
 
 class UpdateBranchScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ class _UpdateBranchScreenState extends State<UpdateBranchScreen> {
   LatLng? _selectedLatLng;
   TextEditingController _searchPlaceController = TextEditingController();
   late LocationResult _locationResult;
+  bool _phoneValidate = true;
 
   @override
   void initState() {
@@ -112,6 +114,10 @@ class _UpdateBranchScreenState extends State<UpdateBranchScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: TextField(
+                      onChanged: (value) => setState(() {
+                        _phoneValidate = FormatUtils.phoneValidate(value);
+                        print(FormatUtils.phoneValidate(value));
+                      }),
                       keyboardType: TextInputType.phone,
                       maxLines: null,
                       controller: _phoneController,
@@ -126,6 +132,17 @@ class _UpdateBranchScreenState extends State<UpdateBranchScreen> {
                       ),
                     ),
                   ),
+                  !_phoneValidate && _phoneController.text != ''
+                      ? Column(
+                          children: [
+                            Gap.k4.height,
+                            Text(
+                              'Số điện thoại gồm 10 số và các đầu số hợp lệ: 03, 05, 07, 08, 09',
+                              style: TextStyle(color: redColor, fontSize: 10),
+                            )
+                          ],
+                        )
+                      : SizedBox.shrink(),
                   SizedBox(height: 16),
                   Gap.k16.height,
                   Text(

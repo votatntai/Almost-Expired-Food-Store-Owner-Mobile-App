@@ -183,12 +183,12 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                             borderRadius: BorderRadius.circular(15),
                             child: DropdownButtonFormField<Branch>(
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                                 border: InputBorder.none,
                                 fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor, // Change this to the color you want
                                 filled: true,
                                 hintStyle: TextStyle(color: Colors.grey),
-                                hintText: 'Chọn chi nhánh*',
+                                hintText: 'Chi nhánh*',
                               ),
                               // value: selectedBranch,
                               onChanged: (Branch? newValue) {
@@ -199,7 +199,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                               items: branchs!.map<DropdownMenuItem<Branch>>((Branch branch) {
                                 return DropdownMenuItem<Branch>(
                                   value: branch,
-                                  child: Text(branch.address.toString()),
+                                  child: SizedBox(width: context.width() - 100, child: Text(branch.address.toString(), overflow: TextOverflow.ellipsis,)),
                                 );
                               }).toList(),
                             ),

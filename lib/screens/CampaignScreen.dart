@@ -1,5 +1,8 @@
+import 'package:appetit/components/ProductComponent.dart';
 import 'package:appetit/cubits/campaign/campaigns_cubit.dart';
 import 'package:appetit/cubits/campaign/campaigns_state.dart';
+import 'package:appetit/cubits/product/products_cubit.dart';
+import 'package:appetit/cubits/product/products_state.dart';
 import 'package:appetit/domains/models/campaign/campaigns.dart';
 import 'package:appetit/screens/UpdateCampaignScreen.dart';
 import 'package:appetit/widgets/AppBar.dart';
@@ -89,42 +92,82 @@ class CampaignScreen extends StatelessWidget {
                     'Chi nhánh',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Gap.k8.height,
+                  Gap.k4.height,
                   Text(
                     campaign.branch!.address.toString(),
                     style: TextStyle(color: Colors.grey),
                   ),
                   Gap.k16.height,
-                  Text(
-                    'Ngày tạo',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Gap.k8.height,
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.createAt.toString())),
-                    style: TextStyle(color: Colors.grey),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ngày tạo',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Gap.k4.height,
+                          Text(
+                            DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.createAt.toString())),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ngày bắt đầu',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Gap.k4.height,
+                          Text(
+                            DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.startTime.toString())),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ngày kết thúc',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Gap.k4.height,
+                          Text(
+                            DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.endTime.toString())),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   Gap.k16.height,
                   Text(
-                    'Ngày bắt đầu',
+                    'Sản phẩm',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Gap.k8.height,
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.startTime.toString())),
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Gap.k16.height,
-                  Text(
-                    'Ngày kết thúc',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Gap.k8.height,
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(DateTime.parse(campaign.endTime.toString())),
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Gap.kSection.height,
+                  BlocBuilder<ProductsCubit, ProductsState>(builder: (context, state) {
+                    if (state is ProductsSuccessState) {
+                      var products = state.products.products;
+                      if (products!.isNotEmpty) {
+                        
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: products.length,
+                        separatorBuilder: (context, index) => Gap.k8.height,
+                        itemBuilder: (context, index) => ProductComponent(product: products[index]),
+                      );
+                      } else {
+                        return Center(child: Text('Chưa có sản phẩm'),);
+                      }
+                    }
+                    return SizedBox.shrink();
+                  })
                 ],
               ),
             )

@@ -32,7 +32,7 @@ class ProductComponent extends StatelessWidget {
                 children: [
                   Text(
                     product.name!,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   product.productCategories != null
                       ? Text(
@@ -95,7 +95,7 @@ class ProductComponent extends StatelessWidget {
                         .toString() +
                     ' ngày',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                  fontSize: 12,
                     color: DateTime.parse(product.expiredAt!)
                                 .difference(DateTime.now())
                                 .inDays <=

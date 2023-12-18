@@ -1,8 +1,10 @@
 
+import 'package:appetit/screens/WalletScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../components/AccountComponent.dart';
 import '../cubits/profile/account_cubit.dart';
 import '../cubits/profile/account_state.dart';
 import '../screens/UpdateProfileScreen.dart';
@@ -52,7 +54,7 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.all( 16),
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -78,23 +80,6 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
                                 fit: BoxFit.cover),
                           ),
                         ),
-                        // Positioned(
-                        //   top: 16 + MediaQuery.of(context).viewPadding.top,
-                        //   right: 16,
-                        //   child: ClipRRect(
-                        //     // clipBehavior: Clip.antiAlias,
-                        //     borderRadius: BorderRadius.circular(25),
-                        //     child: Container(
-                        //       color: Colors.black.withOpacity(0.5),
-                        //       height: 50,
-                        //       width: 50,
-                        //       child: InkWell(
-                        //           onTap: () {},
-                        //           child: Icon(Icons.share_outlined,
-                        //               color: Colors.white)),
-                        //     ),
-                        //   ),
-                        // ),
                         Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -135,6 +120,11 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
                       ],
                     ),
                   ),
+                  Gap.kSection.height,
+                  AccountComponent(icon: 'image/appetit/wallet.png', content: 'Ví').onTap(() {
+                    Navigator.pushNamed(context, WalletScreen.routeName);
+                  }),
+                  Gap.kSection.height,
                   TextButton(
                       onPressed: () {
                         AuthService().signOut(context);
@@ -146,78 +136,6 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ))
-                  //2nd content (Social information)
-                  // Gap.k16.height,
-                  // Container(
-                  //   margin: EdgeInsets.symmetric(horizontal: 16),
-                  //   width: MediaQuery.of(context).size.width,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.all(Radius.circular(15)),
-                  //     color: appStore.isDarkModeOn
-                  //         ? context.cardColor
-                  //         : appetitAppContainerColor,
-                  //   ),
-                  //   height: 100,
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //     children: [
-                  //       Column(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text('24',
-                  //               style: TextStyle(
-                  //                   fontSize: 25,
-                  //                   fontWeight: FontWeight.w800,
-                  //                   color: context.iconColor)),
-                  //           Text('Recipes',
-                  //               style: TextStyle(
-                  //                   fontSize: 13,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: context.iconColor)),
-                  //         ],
-                  //       ),
-                  //       Column(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text('432',
-                  //               style: TextStyle(
-                  //                   fontSize: 25,
-                  //                   fontWeight: FontWeight.w800,
-                  //                   color: context.iconColor)),
-                  //           Text('Following',
-                  //               style: TextStyle(
-                  //                   fontSize: 13,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: context.iconColor)),
-                  //         ],
-                  //       ),
-                  //       Column(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text('643',
-                  //               style: TextStyle(
-                  //                   fontSize: 25,
-                  //                   fontWeight: FontWeight.w800,
-                  //                   color: context.iconColor)),
-                  //           Text('Follow',
-                  //               style: TextStyle(
-                  //                   fontSize: 13,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: context.iconColor)),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ).onTap(() {
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => AFollowersScreen()));
-                  // },
-                  //     highlightColor: Colors.transparent,
-                  //     splashColor: Colors.transparent),
-                  // SizedBox(height: 32),
-                  // APopularRecipesComponent(),
                 ],
               ),
             ),

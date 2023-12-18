@@ -9,6 +9,7 @@ import '../cubits/profile/account_state.dart';
 import '../domains/models/account.dart';
 import '../main.dart';
 import '../utils/Colors.dart';
+import '../utils/format_utils.dart';
 import '../utils/gap.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   late UpdateProfileCubit _updateProfileCubit;
+  bool _phoneValidate = true;
 
   @override
   void initState() {
@@ -108,6 +110,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: TextField(
+                        onChanged: (value) => setState(() {
+                          _phoneValidate = FormatUtils.phoneValidate(value);
+                          print(FormatUtils.phoneValidate(value));
+                        }),
                         keyboardType: TextInputType.phone,
                         controller: _phoneController,
                         decoration: InputDecoration(
@@ -122,7 +128,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       ),
                     ),
                     Gap.k16.height,
-
+                    !_phoneValidate && _phoneController.text != ''
+                        ? Column(
+                            children: [
+                              Gap.k4.height,
+                              Text(
+                                'Số điện thoại gồm 10 số và các đầu số hợp lệ: 03, 05, 07, 08, 09',
+                                style: TextStyle(color: redColor, fontSize: 10),
+                              )
+                            ],
+                          )
+                        : SizedBox.shrink(),
                     Text(
                       '(*): Bắt buộc nhập',
                       style: TextStyle(color: grey),
