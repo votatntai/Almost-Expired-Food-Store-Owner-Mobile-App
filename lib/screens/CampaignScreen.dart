@@ -73,6 +73,7 @@ class CampaignScreen extends StatelessWidget {
             }
             showDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (context) => ProcessingPopup(
                       state: state,
                     ));
@@ -236,7 +237,7 @@ class ProcessingPopup extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            (state as UpdateCampaignFailedState).msg.replaceAll('Exception: ', ''),
+                            (state as DeleteCampaignFailedState).msg.replaceAll('Exception: ', ''),
                             textAlign: TextAlign.center,
                           ),
                           TextButton(

@@ -24,7 +24,17 @@ class StoresRepo {
       var res = await apiClient.post('/api/stores', data: formData);
       return res.statusCode!;
     } on DioException catch (e) {
-      print(e);
+      print('Exception at create store: ' + e.response!.data);
+      throw Exception(msg_server_error);
+    }
+  }
+
+  Future<int> updateStore({String? name, required String storeId, String? description}) async {
+    try {
+      var res = await apiClient.put('/api/stores/$storeId', data: {'name' : name, 'description' : description});
+      return res.statusCode!;
+    } on DioException catch (e) {
+      print('Exception at update store: ' + e.response!.data);
       throw Exception(msg_server_error);
     }
   }

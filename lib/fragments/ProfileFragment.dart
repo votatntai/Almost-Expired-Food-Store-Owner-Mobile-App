@@ -1,5 +1,6 @@
 import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/WalletScreen.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -8,6 +9,7 @@ import '../components/AccountComponent.dart';
 import '../cubits/profile/account_cubit.dart';
 import '../cubits/profile/account_state.dart';
 import '../screens/UpdateProfileScreen.dart';
+import '../screens/UpdateStoreScreen.dart';
 import '../services/auth_service.dart';
 import '../utils/gap.dart';
 
@@ -35,17 +37,26 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
       if (state is AccountSuccessState) {
         var account = state.account;
         return Scaffold(
+          backgroundColor: appLayout_background,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             leading: SizedBox.shrink(),
             elevation: 0,
             backgroundColor: transparentColor,
             actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, UpdateProfileScreen.routeName, arguments: account);
-                  },
-                  icon: Icon(Icons.edit_outlined))
+              PopupMenuButton(
+                icon: Icon(Icons.edit_outlined),
+                itemBuilder: (context) => [
+                PopupMenuItem(child: Text('Tài khoản'), value: 'account',),
+                PopupMenuItem(child: Text('Cửa hàng'), value: 'store',),
+              ], onSelected: (value) {
+                value == 'account' ? Navigator.pushNamed(context, UpdateProfileScreen.routeName, arguments: account) : Navigator.pushNamed(context, UpdateStoreScreen.routeName, arguments: account);
+              },)
+              // IconButton(
+              //     onPressed: () {
+              //       Navigator.pushNamed(context, UpdateProfileScreen.routeName, arguments: account);
+              //     },
+              //     icon: Icon(Icons.edit_outlined))
             ],
           ),
           body: SizedBox(

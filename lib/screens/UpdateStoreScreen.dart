@@ -1,60 +1,51 @@
-import 'dart:io';
 import 'package:appetit/cubits/store/stores_cubit.dart';
-import 'package:appetit/cubits/store/stores_state.dart';
-import 'package:appetit/main.dart';
-import 'package:appetit/screens/DashboardScreen.dart';
-import 'package:appetit/utils/Colors.dart';
+import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../cubits/store/stores_state.dart';
+import '../main.dart';
+import '../utils/Colors.dart';
 import '../utils/gap.dart';
+import 'DashboardScreen.dart';
 
-class CreateStoreScreen extends StatefulWidget {
-  static const String routeName = '/create-store';
-  CreateStoreScreen({Key? key}) : super(key: key);
+class UpdateStoreScreen extends StatefulWidget {
+  static const String routeName = '/update-store';
+  const UpdateStoreScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateStoreScreen> createState() => _CreateStoreScreenState();
+  State<UpdateStoreScreen> createState() => _UpdateStoreScreenState();
 }
 
-class _CreateStoreScreenState extends State<CreateStoreScreen> {
-  File? _imageFile;
-  String _storeName = '';
-  String _description = '';
+class _UpdateStoreScreenState extends State<UpdateStoreScreen> {
+    TextEditingController _storeName = TextEditingController();
+  TextEditingController _description = TextEditingController();
+  late UpdateStoreCubit _updateStoreCubit;
 
   @override
-  void initState() {
+  void initState(){
+    _updateStoreCubit = BlocProvider.of<UpdateStoreCubit>(context);
+    _storeName.text = StoresRepo.store.name!;
+    _description.text = StoresRepo.store.description!;
     super.initState();
   }
 
   @override
   void dispose() {
+    _storeName.dispose();
+    _description.dispose();
     super.dispose();
   }
-
-  Future<void> _getImage(BuildContext context) async {
-    XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _imageFile = File(image.path);
-      });
-      // widget.onImageSelected(image);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final createStoreCubit = BlocProvider.of<CreateStoreCubit>(context);
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: MyAppBar(
-        title: ' Tạo cửa hàng',
+        title: 'Cập nhật cửa hàng',
       ),
-      body: BlocListener<CreateStoreCubit, CreateStoreState>(
+      body: BlocListener<UpdateStoreCubit, UpdateStoreState>(
         listener: (context, state) {
-          if (!(state is CreateStoreLoadingState)) {
+          if (!(state is UpdateStoreLoadingState)) {
             Navigator.pop(context);
           }
           showDialog(
@@ -79,11 +70,7 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            _storeName = value;
-                          });
-                        },
+                        controller: _storeName,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
@@ -95,42 +82,12 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 220,
-                        color: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
-                        child: _imageFile == null
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.file_upload_outlined, color: Colors.grey),
-                                  SizedBox(height: 8),
-                                  Text('Tải lên ảnh đại diện cho cửa hàng*', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
-                                  // Text('*maximum size 2MB', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey)),
-                                ],
-                              )
-                            : Image.file(
-                                _imageFile!,
-                                fit: BoxFit.cover,
-                              ),
-                      ).onTap(() {
-                        // _pickImage(ImageSource.gallery);
-                        _getImage(context);
-                      }),
-                    ),
                     Gap.k16.height,
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: TextField(
                         maxLines: null,
-                        onChanged: (value) {
-                          setState(() {
-                            _description = value;
-                          });
-                        },
+                        controller: _description,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           fillColor: appStore.isDarkModeOn ? context.cardColor : appetitAppContainerColor,
@@ -156,15 +113,16 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-                  child: (_storeName != '' && _imageFile != null && _description != '' && !(MediaQuery.of(context).viewInsets.bottom > 0))
+                  child: (_storeName.text != '' && _description.text != '' && !(MediaQuery.of(context).viewInsets.bottom > 0))
                       ? ElevatedButton(
                           onPressed: () async {
-                            await createStoreCubit.createStore(_storeName, _imageFile!, _description);
+                            await _updateStoreCubit.updateStore(storeId: StoresRepo.store.id!, name: _storeName.text, description: _description.text);
+                            StoresRepo.store = await StoresRepo().getStoresByOwner().then((value) => value.stores!.first);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Tạo', style: TextStyle(fontSize: 18)),
+                              Text('Lưu', style: TextStyle(fontSize: 18)),
                             ],
                           ),
                           style: ElevatedButton.styleFrom(
@@ -185,7 +143,7 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> {
 }
 
 class ProcessingPopup extends StatelessWidget {
-  final CreateStoreState state;
+  final UpdateStoreState state;
   const ProcessingPopup({
     Key? key,
     required this.state,
@@ -198,7 +156,7 @@ class ProcessingPopup extends StatelessWidget {
         width: 150,
         padding: const EdgeInsets.all(32.0),
         child: Builder(builder: (context) {
-          if (state is CreateStoreLoadingState) {
+          if (state is UpdateStoreLoadingState) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -210,7 +168,7 @@ class ProcessingPopup extends StatelessWidget {
               ],
             );
           }
-          if (state is CreateStoreSuccessState) {
+          if (state is UpdateStoreSuccessState) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -219,7 +177,12 @@ class ProcessingPopup extends StatelessWidget {
                 Text('Tạo cửa hàng thành công'),
                 TextButton(
                     onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, DashboardScreen.routeName, (route) => false);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => DashboardScreen(
+                                tabIndex: 2,
+                              )));
                     },
                     child: Text(
                       'Đóng',

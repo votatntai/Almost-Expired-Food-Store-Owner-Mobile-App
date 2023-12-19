@@ -20,7 +20,7 @@ class StoresCubit extends Cubit<StoresState> {
   }
 }
 
-//Create store
+//Update store
 class CreateStoreCubit extends Cubit<CreateStoreState> {
   final StoresRepo _storesRepo = getIt<StoresRepo>();
   CreateStoreCubit() : super(CreateStoreState());
@@ -32,6 +32,22 @@ class CreateStoreCubit extends Cubit<CreateStoreState> {
       emit(CreateStoreSuccessState(statusCode: statusCode));
     } on Exception catch (e) {
       emit(CreateStoreFailedState(msg: e.toString()));
+    }
+  }
+}
+
+//Update store
+class UpdateStoreCubit extends Cubit<UpdateStoreState> {
+  final StoresRepo _storesRepo = getIt<StoresRepo>();
+  UpdateStoreCubit() : super(UpdateStoreState());
+
+   Future<void> updateStore({String? name, required String storeId, String? description}) async {
+    try {
+      emit(UpdateStoreLoadingState());
+      var statusCode = await _storesRepo.updateStore(storeId: storeId, description: description, name: name);
+      emit(UpdateStoreSuccessState(statusCode: statusCode));
+    } on Exception catch (e) {
+      emit(UpdateStoreFailedState(msg: e.toString()));
     }
   }
 }
