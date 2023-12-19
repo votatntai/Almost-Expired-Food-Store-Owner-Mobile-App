@@ -216,50 +216,52 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ]))
                               ],
                             ),
-                            _isEditing ? SizedBox.shrink() : Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(color: appetitAppContainerColor, borderRadius: BorderRadius.circular(8)),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'image/appetit/withdraw.png',
-                                    height: 20,
-                                  ),
-                                  Gap.k8.width,
-                                  Text('Rút', style: TextStyle(color: Colors.orange.shade700, fontWeight: FontWeight.bold))
-                                ],
-                              ),
-                            ).onTap(() {
-                              if (_bankNameController.text != '' && _bankAccountController.text != '') {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) => WithdrawDialog(
-                                          amountWithdrawController: _amountWithdrawController,
-                                          callback: () async {
-                                            await _withdrawRequestCubit.withdrawRequest(amount: _amountWithdrawController.text.toInt());
-                                            Navigator.pop(context);
-                                          },
-                                        )).then((value) => value == true ? _amountWithdrawController.text = '' : null);
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => Dialog(
-                                          child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                                            Text('Cập nhật thông tin ví và thử lại'),
-                                            Gap.k16.height,
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
+                            _isEditing
+                                ? SizedBox.shrink()
+                                : Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(color: appetitAppContainerColor, borderRadius: BorderRadius.circular(8)),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          'image/appetit/withdraw.png',
+                                          height: 20,
+                                        ),
+                                        Gap.k8.width,
+                                        Text('Rút', style: TextStyle(color: Colors.orange.shade700, fontWeight: FontWeight.bold))
+                                      ],
+                                    ),
+                                  ).onTap(() {
+                                    if (_bankNameController.text != '' && _bankAccountController.text != '') {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) => WithdrawDialog(
+                                                amountWithdrawController: _amountWithdrawController,
+                                                callback: () async {
+                                                  await _withdrawRequestCubit.withdrawRequest(amount: _amountWithdrawController.text.toInt());
+                                                  Navigator.pop(context);
                                                 },
-                                                child: Text(
-                                                  'Đóng',
-                                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                                ))
-                                          ]).paddingAll(16),
-                                        ));
-                              }
-                            })
+                                              )).then((value) => value == true ? _amountWithdrawController.text = '' : null);
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => Dialog(
+                                                child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                                                  Text('Cập nhật thông tin ví và thử lại'),
+                                                  Gap.k16.height,
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text(
+                                                        'Đóng',
+                                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                                      ))
+                                                ]).paddingAll(16),
+                                              ));
+                                    }
+                                  })
                           ],
                         ),
                       ))
@@ -304,7 +306,7 @@ class _WithdrawDialogState extends State<WithdrawDialog> {
 
   void _checkAmountValidation() {
     setState(() {
-      isAmountValid = widget.amountWithdrawController.text.isNotEmpty;
+      isAmountValid = widget.amountWithdrawController.text.isNotEmpty && widget.amountWithdrawController.text.toInt() >= 50000;
     });
   }
 
@@ -333,6 +335,18 @@ class _WithdrawDialogState extends State<WithdrawDialog> {
                 labelStyle: TextStyle(color: Colors.grey),
               ),
             ),
+            widget.amountWithdrawController.text.toInt() < 50000 && widget.amountWithdrawController.text.toInt() > 0
+                ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Gap.k8.height,
+                      Text(
+                        'Tối thiểu 50,000 VND',
+                        style: TextStyle(color: redColor, fontSize: 12),
+                      )
+                    ],
+                  )
+                : SizedBox.shrink(),
             Gap.k16.height,
             Row(
               children: [
