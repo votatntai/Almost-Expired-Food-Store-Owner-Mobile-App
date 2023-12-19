@@ -5,6 +5,7 @@ import 'package:appetit/cubits/product/products_cubit.dart';
 import 'package:appetit/cubits/product/products_state.dart';
 import 'package:appetit/domains/models/campaign/campaigns.dart';
 import 'package:appetit/screens/UpdateCampaignScreen.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,7 @@ class CampaignScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deleteCampaignCubit = BlocProvider.of<DeleteCampaignCubit>(context);
     return Scaffold(
+      backgroundColor: appLayout_background,
         appBar: MyAppBar(
           title: campaign.name,
           actions: [

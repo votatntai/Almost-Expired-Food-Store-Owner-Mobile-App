@@ -17,7 +17,7 @@ class OrdersCanceledScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ordersCubit = BlocProvider.of<OrdersCubit>(context);
-    ordersCubit.getOrdersList(status: 'Canceled', storeId: StoresRepo.storeId);
+    ordersCubit.getOrdersList(status: 'Canceled', storeId: StoresRepo.store.id!);
     return Scaffold(
       appBar: MyAppBar(title: 'Đơn đã hủy'),
       body: BlocBuilder<OrdersCubit, OrdersState>(

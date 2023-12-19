@@ -2,6 +2,7 @@ import 'package:appetit/components/ProductComponent.dart';
 import 'package:appetit/cubits/product/products_cubit.dart';
 import 'package:appetit/cubits/product/products_state.dart';
 import 'package:appetit/screens/CreateProductScreen.dart';
+import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:appetit/widgets/CreateNew.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appLayout_background,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
         backgroundColor: Colors.orange.shade600,
@@ -37,11 +39,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
       appBar: MyAppBar(title: 'Sản phẩm'),
       body: BlocBuilder<ProductsCubit, ProductsState>(builder: (context, state) {
         if (state is ProductsLoadingState) {
-          return ListView.builder(
+          return ListView.separated(
+            separatorBuilder: (context, index) => Gap.k8.height,
               itemCount: 6,
-              padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+              padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
               itemBuilder: (context, index) {
                 return Container(
+                  decoration: BoxDecoration(color: white),
                   width: context.width(),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -73,7 +77,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           if (state.products.products!.isNotEmpty) {
             var products = state.products.products;
             return ListView.separated(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(8),
                 itemBuilder: (context, index) {
                   return ProductComponent(product: products![index]);
                 },

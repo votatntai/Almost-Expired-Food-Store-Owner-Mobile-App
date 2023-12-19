@@ -57,7 +57,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         }
         if (state is StoresSuccessState) {
           if (state.stores.stores!.isNotEmpty) {
-            StoresRepo.storeId = state.stores.stores!.first.id.toString();
+            StoresRepo.store = state.stores.stores!.first;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

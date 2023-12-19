@@ -43,7 +43,7 @@ class MessagingService {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _initLocalNotify();
-      showNotification(message.notification!.title!, message.notification!.body!, message.data['link']);
+      showNotification(message.notification!.title!, message.notification!.body!, message.data['link'], message.data['type']);
     });
   }
 
@@ -58,7 +58,9 @@ class MessagingService {
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
         print('payload at click noti event: ' + details.payload.toString());
-        navigatorKey.currentState?.pushNamed(OrderDetailsScreen.routeName, arguments: details.payload);
+        if (details.payload != null) {
+          navigatorKey.currentState?.pushNamed(OrderDetailsScreen.routeName, arguments: details.payload);
+        }
       },
     );
 
@@ -85,10 +87,10 @@ class MessagingService {
     String body = message.notification?.body ?? 'Default body';
 
     // Hiển thị thông báo khi có message tới
-    await showNotification(title, body, message.data['link']);
+    await showNotification(title, body, message.data['link'], message.data['type']);
   }
 
-  Future<void> showNotification(String title, String body, String link) async {
+  Future<void> showNotification(String title, String body, String link, String type) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your channel id', // ID kênh thông báo
       'your channel name', // Tên kênh thông báo
@@ -104,6 +106,6 @@ class MessagingService {
       body,
       platformChannelSpecifics,
     );
-    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: link);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: type == 'Order' ? link : null);
   }
 }

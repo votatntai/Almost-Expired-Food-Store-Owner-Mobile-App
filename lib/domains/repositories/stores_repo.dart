@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 
 class StoresRepo {
   final Dio apiClient = getIt<Dio>();
-  static String storeId = '';
+  static Store store = Store();
   Future<Stores> getStoresByOwner() async {
     try {
       var res = await apiClient.get('/api/stores/store-owner');
@@ -20,17 +20,10 @@ class StoresRepo {
   Future<int> createStore(String name, File thumbnail, String description) async {
     try {
       apiClient.options.headers['Content-Type'] = 'multipart/form-data';
-      FormData formData = FormData.fromMap({
-        'name' : name,
-        'thumbnail' : await MultipartFile.fromFile(
-          thumbnail.path,
-          filename: '${name}_store_thumbnail'
-        ),
-        'description' : description
-      });
+      FormData formData = FormData.fromMap({'name': name, 'thumbnail': await MultipartFile.fromFile(thumbnail.path, filename: '${name}_store_thumbnail'), 'description': description});
       var res = await apiClient.post('/api/stores', data: formData);
       return res.statusCode!;
-    } on DioException catch (e){
+    } on DioException catch (e) {
       print(e);
       throw Exception(msg_server_error);
     }

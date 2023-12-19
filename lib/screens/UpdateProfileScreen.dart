@@ -127,7 +127,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         ),
                       ),
                     ),
-                    Gap.k16.height,
+                    Gap.k8.height,
                     !_phoneValidate && _phoneController.text != ''
                         ? Column(
                             children: [

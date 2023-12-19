@@ -36,7 +36,7 @@ class _OrdersWaitPaymentScreenState extends State<OrdersWaitPaymentScreen> {
   void initState() {
     super.initState();
     ordersCubit = BlocProvider.of<OrdersCubit>(context);
-    ordersCubit!.getOrdersList(status: 'Pending Payment', storeId: StoresRepo.storeId);
+    ordersCubit!.getOrdersList(status: 'Pending Payment', storeId: StoresRepo.store.id!);
     // WidgetsBinding.instance.addObserver(this);
   }
 
@@ -115,7 +115,7 @@ class _OrdersWaitPaymentScreenState extends State<OrdersWaitPaymentScreen> {
   Widget build(BuildContext context) {
 
 
-    ordersCubit!.getOrdersList(status: 'Pending Payment', storeId: StoresRepo.storeId);
+    ordersCubit!.getOrdersList(status: 'Pending Payment', storeId: StoresRepo.store.id!);
     return Scaffold(
       appBar: MyAppBar(
         title: 'Chờ thanh toán',

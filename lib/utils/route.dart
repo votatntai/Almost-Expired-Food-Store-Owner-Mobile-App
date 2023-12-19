@@ -27,9 +27,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/order/orders_cubit.dart';
 import '../cubits/profile/account_cubit.dart';
 import '../domains/models/account.dart';
+import '../domains/models/product/products.dart';
 import '../screens/CampaignsScreen.dart';
 import '../screens/OrdersCanceledScreen.dart';
 import '../screens/OrdersWaitPickupScreen.dart';
+import '../screens/ProductDetailScreen.dart';
 import '../screens/UpdateProfileScreen.dart';
 
 PageRoute? generateRoute(RouteSettings settings) {
@@ -63,7 +65,7 @@ PageRoute? generateRoute(RouteSettings settings) {
     case CampaignsScreen.routeName:
       return MaterialPageRoute(builder: (_) => BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit(), child: CampaignsScreen()));
     case ProductsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(storeId: StoresRepo.storeId), child: ProductsScreen()));
+      return MaterialPageRoute(builder: (_) => BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(storeId: StoresRepo.store.id), child: ProductsScreen()));
     case CreateProductScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [
@@ -123,10 +125,15 @@ PageRoute? generateRoute(RouteSettings settings) {
     case WalletScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [
-                BlocProvider<WalletCubit>(create: (context) => WalletCubit(storeId: StoresRepo.storeId)),
+                BlocProvider<WalletCubit>(create: (context) => WalletCubit(storeId: StoresRepo.store.id!)),
                 BlocProvider<UpdateWalletCubit>(create: (context) => UpdateWalletCubit()),
                 BlocProvider<WithdrawRequestCubit>(create: (context) => WithdrawRequestCubit())
               ], child: WalletScreen()));
+    case ProductDetailScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => ProductDetailScreen(
+            product: settings.arguments as Product,
+          ));
     default:
   }
   return null;

@@ -1,4 +1,4 @@
-
+import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/screens/WalletScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +19,10 @@ class ProfileFragment extends StatefulWidget {
 }
 
 class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +52,7 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
-              padding: EdgeInsets.all( 16),
+              padding: EdgeInsets.all(16),
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -70,49 +68,27 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
                         Positioned(
                           top: 0,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(25),
-                                bottomLeft: Radius.circular(25)),
-                            child: Image.asset(
-                                'image/appetit/backgroundprofile.jpg',
-                                width: MediaQuery.of(context).size.width,
-                                height: 220,
-                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
+                            child: Image.asset('image/appetit/backgroundprofile.jpg', width: MediaQuery.of(context).size.width, height: 220, fit: BoxFit.cover),
                           ),
                         ),
                         Card(
                           elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 32.0, horizontal: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(40),
-                                  child: FadeInImage.assetNetwork(
-                                      placeholder:
-                                          'image/appetit/avatar_placeholder.png',
-                                      image: account.avatarUrl!,
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.cover),
+                                  child: FadeInImage.assetNetwork(placeholder: 'image/appetit/avatar_placeholder.png', image: account.avatarUrl!, width: 80, height: 80, fit: BoxFit.cover),
                                 ),
                                 Gap.k8.height,
-                                Text(account.name!,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20)),
-                                Text(account.email!,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12)),
-                                account.phone != null ? Text(account.phone!,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12)) : SizedBox.shrink(),
+                                Text(account.name!, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20)),
+                                Text(StoresRepo.store.name!),
+                                Text(account.email!, style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12)),
+                                account.phone != null ? Text(account.phone!, style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12)) : SizedBox.shrink(),
                               ],
                             ),
                           ),
@@ -125,17 +101,16 @@ class _ProfileFragmentState extends State<ProfileFragment> with TickerProviderSt
                     Navigator.pushNamed(context, WalletScreen.routeName);
                   }),
                   Gap.kSection.height,
-                  TextButton(
-                      onPressed: () {
-                        AuthService().signOut(context);
-                      },
-                      child: Text(
-                        'Logout',
-                        style: TextStyle(
-                            color: Colors.redAccent.shade700,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ))
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(color: redColor.withOpacity(0.3), borderRadius: BorderRadius.circular(8)),
+                    child: Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.redAccent.shade700, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ).onTap(() {
+                    AuthService().signOut(context);
+                  })
                 ],
               ),
             ),

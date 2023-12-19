@@ -52,7 +52,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   @override
   void initState() {
     final campaignsCubit = BlocProvider.of<CampaignsCubit>(context);
-    campaignsCubit.getCampaignsList(storeId: StoresRepo.storeId);
+    campaignsCubit.getCampaignsList(storeId: StoresRepo.store.id);
     if (_selectedDate != null) {
       _createAtController = TextEditingController(
         text: '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',

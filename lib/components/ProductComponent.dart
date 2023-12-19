@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../domains/models/product/products.dart';
+import '../screens/ProductDetailScreen.dart';
 
 class ProductComponent extends StatelessWidget {
   final Product product;
@@ -16,15 +17,10 @@ class ProductComponent extends StatelessWidget {
     }
     return Container(
             width: context.width(),
-            // padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: white),
             child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              FadeInImage.assetNetwork(
-                      image: product.thumbnailUrl.toString(),
-                      placeholder: 'image/appetit/placeholder.png',
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover)
-                  .cornerRadiusWithClipRRect(8),
+              FadeInImage.assetNetwork(image: product.thumbnailUrl.toString(), placeholder: 'image/appetit/placeholder.png', height: 80, width: 80, fit: BoxFit.cover).cornerRadiusWithClipRRect(8),
               8.width,
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,51 +32,31 @@ class ProductComponent extends StatelessWidget {
                   ),
                   product.productCategories != null
                       ? Text(
-                          product.productCategories!.first.category!.name
-                              .toString(),
+                          product.productCategories!.first.category!.name.toString(),
                           style: TextStyle(color: Colors.grey, fontSize: 14),
                         )
                       : SizedBox.shrink(),
                   Text(
-                    '₫' +
-                        FormatUtils.formatPrice(product.price!.toDouble())
-                            .toString(),
+                    '₫' + FormatUtils.formatPrice(product.price!.toDouble()).toString(),
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14.0,
                       decoration: TextDecoration.lineThrough,
                     ),
                   ),
-                  Row(    
+                  Row(
                     children: [
                       Text(
-                        '₫' +
-                            FormatUtils.formatPrice(
-                                    product.promotionalPrice!.toDouble())
-                                .toString(),
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold),
+                        '₫' + FormatUtils.formatPrice(product.promotionalPrice!.toDouble()).toString(),
+                        style: TextStyle(color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.bold),
                       ),
                       Gap.k8.width,
                       Container(
                         padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(width: 1, color: Colors.redAccent),
-                            borderRadius: BorderRadius.circular(4)),
+                        decoration: BoxDecoration(border: Border.all(width: 1, color: Colors.redAccent), borderRadius: BorderRadius.circular(4)),
                         child: Text(
-                          'Giảm ' +
-                              (((product.price! - product.promotionalPrice!) / product.price!) *
-                                      100)
-                                  .round()
-                                  .toString() +
-                              '%',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.redAccent,
-                              fontWeight: FontWeight.w600),
+                          'Giảm ' + (((product.price! - product.promotionalPrice!) / product.price!) * 100).round().toString() + '%',
+                          style: TextStyle(fontSize: 12, color: Colors.redAccent, fontWeight: FontWeight.w600),
                         ),
                       )
                     ],
@@ -88,33 +64,18 @@ class ProductComponent extends StatelessWidget {
                 ],
               ).expand(),
               Text(
-                'Còn ' +
-                    DateTime.parse(product.expiredAt!)
-                        .difference(DateTime.now())
-                        .inDays
-                        .toString() +
-                    ' ngày',
+                'Còn ' + DateTime.parse(product.expiredAt!).difference(DateTime.now()).inDays.toString() + ' ngày',
                 style: TextStyle(
-                  fontSize: 12,
-                    color: DateTime.parse(product.expiredAt!)
-                                .difference(DateTime.now())
-                                .inDays <=
-                            10
+                    fontSize: 12,
+                    color: DateTime.parse(product.expiredAt!).difference(DateTime.now()).inDays <= 10
                         ? Colors.redAccent
-                        : DateTime.parse(product.expiredAt!)
-                                        .difference(DateTime.now())
-                                        .inDays <=
-                                    30 &&
-                                DateTime.parse(product.expiredAt!)
-                                        .difference(DateTime.now())
-                                        .inDays >
-                                    10
+                        : DateTime.parse(product.expiredAt!).difference(DateTime.now()).inDays <= 30 && DateTime.parse(product.expiredAt!).difference(DateTime.now()).inDays > 10
                             ? Colors.orangeAccent
                             : Colors.green),
               )
             ]))
-        // .onTap(() => Navigator.pushNamed(context, ProductDetailScreen.routeName,
-        //     arguments: product))
-            ;
+        .onTap(() => Navigator.pushNamed(context, ProductDetailScreen.routeName,
+            arguments: product))
+        ;
   }
 }

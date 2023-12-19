@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../screens/OrderDetailsScreen.dart';
+import '../utils/gap.dart';
 
 class NotificationFragment extends StatefulWidget {
   const NotificationFragment({Key? key}) : super(key: key);
@@ -58,10 +59,30 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                         itemBuilder: (context, index) {
                           return Container(
                             decoration: BoxDecoration(color: notifications[index].isRead! ? appLayout_background : appetitAppContainerColor),
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                notifications[index].title == 'Đơn hàng mới'
+                                    ? Image.asset(
+                                        'image/appetit/order.png',
+                                        width: 36,
+                                      )
+                                    : notifications[index].title == 'Tạo yêu cầu rút tiền thành công'
+                                        ? Image.asset(
+                                            'image/appetit/request.png',
+                                            width: 36,
+                                          )
+                                        : notifications[index].title == 'Rút tiền thành công'
+                                            ? Image.asset(
+                                                'image/appetit/withdrawal.png',
+                                                width: 36,
+                                              )
+                                            : Image.asset(
+                                                'image/appetit/notification.png',
+                                                width: 36,
+                                              ),
+                                Gap.k16.width,
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,11 +102,12 @@ class _NotificationFragmentState extends State<NotificationFragment> {
                           ).onTap(() async {
                             await NotificationRepo().markAsRead(notificationId: notifications[index].id!);
                             setValue(AppConstant.NOTI_COUNT, notifications.length);
-                            Navigator.pushNamed(
-                              context,
-                              OrderDetailsScreen.routeName,
-                              arguments: notifications[index].id
-                            );
+                            if (notifications[index].type == 'Order') {
+                              Navigator.pushNamed(context, OrderDetailsScreen.routeName, arguments: notifications[index].id);
+                            }
+                            setState(() {
+                              
+                            });
                           });
                         },
                       ),
