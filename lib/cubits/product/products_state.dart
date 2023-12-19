@@ -28,3 +28,18 @@ class CreateProductSuccessState extends CreateProductState {
   final int statusCode;
   CreateProductSuccessState({required this.statusCode});
 }
+
+//Create product
+class UpdateProductState {}
+
+class UpdateProductLoadingState extends UpdateProductState {}
+
+class UpdateProductFailedState extends UpdateProductState {
+  final String msg;
+  UpdateProductFailedState({required this.msg});
+}
+
+class UpdateProductSuccessState extends UpdateProductState {
+  final int statusCode;
+  UpdateProductSuccessState({required this.statusCode});
+}

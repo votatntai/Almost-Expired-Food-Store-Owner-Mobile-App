@@ -20,7 +20,7 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen> {
   TextEditingController _bankNameController = TextEditingController();
-  TextEditingController _bankAccountControlelr = TextEditingController();
+  TextEditingController _bankAccountController = TextEditingController();
   TextEditingController _amountWithdrawController = TextEditingController();
   int _balance = 0;
   late UpdateWalletCubit _updateWalletCubit;
@@ -44,7 +44,7 @@ class _WalletScreenState extends State<WalletScreen> {
           _isEditing
               ? TextButton(
                   onPressed: () {
-                    _updateWalletCubit.updateWallet(walletId: _walletId, bankName: _bankNameController.text, bankAccount: _bankAccountControlelr.text);
+                    _updateWalletCubit.updateWallet(walletId: _walletId, bankName: _bankNameController.text, bankAccount: _bankAccountController.text);
                   },
                   child: Text(
                     'Lưu',
@@ -70,8 +70,8 @@ class _WalletScreenState extends State<WalletScreen> {
         }
         if (state is WalletSuccessState) {
           var wallet = state.wallet;
-          _bankNameController.text = wallet.bankName!;
-          _bankAccountControlelr.text = wallet.bankAccount!;
+          _bankNameController.text = wallet.bankName ?? '';
+          _bankAccountController.text = wallet.bankAccount ?? '';
           _balance = wallet.balance!;
           _walletId = wallet.id!;
           return BlocListener<UpdateWalletCubit, UpdateWalletState>(
@@ -170,7 +170,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: TextField(
-                          controller: _bankAccountControlelr,
+                          controller: _bankAccountController,
                           readOnly: !_isEditing,
                           style: TextStyle(color: _isEditing ? context.iconColor : grey),
                           decoration: InputDecoration(
@@ -216,7 +216,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ]))
                               ],
                             ),
-                            Container(
+                            _isEditing ? SizedBox.shrink() : Container(
                               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(color: appetitAppContainerColor, borderRadius: BorderRadius.circular(8)),
                               child: Row(
@@ -230,16 +230,35 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ],
                               ),
                             ).onTap(() {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => WithdrawDialog(
-                                        amountWithdrawController: _amountWithdrawController,
-                                        callback: () async {
-                                          await _withdrawRequestCubit.withdrawRequest(amount: _amountWithdrawController.text.toInt());
-                                          Navigator.pop(context);
-                                        },
-                                      )).then((value) => value == true ? _amountWithdrawController.text = '' : null);
+                              if (_bankNameController.text != '' && _bankAccountController.text != '') {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) => WithdrawDialog(
+                                          amountWithdrawController: _amountWithdrawController,
+                                          callback: () async {
+                                            await _withdrawRequestCubit.withdrawRequest(amount: _amountWithdrawController.text.toInt());
+                                            Navigator.pop(context);
+                                          },
+                                        )).then((value) => value == true ? _amountWithdrawController.text = '' : null);
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                          child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                                            Text('Cập nhật thông tin ví và thử lại'),
+                                            Gap.k16.height,
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text(
+                                                  'Đóng',
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ))
+                                          ]).paddingAll(16),
+                                        ));
+                              }
                             })
                           ],
                         ),

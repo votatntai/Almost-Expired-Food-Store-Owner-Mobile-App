@@ -1,3 +1,4 @@
+import 'package:appetit/screens/UpdateProductScreen.dart';
 import 'package:appetit/utils/gap.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -29,6 +30,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, UpdateProductScreen.routeName, arguments: widget.product);
+              },
+              icon: Icon(Icons.edit_outlined))
+        ],
       ),
       body: Stack(
         children: [
@@ -113,10 +121,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   'Mô tả sản phẩm',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Gap.k8.height,
+                Gap.k4.height,
                 Text(
                   widget.product.description.toString(),
                   style: TextStyle(color: Colors.grey),
+                ),
+                Gap.kSection.height,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Ngày sản xuất',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Gap.k4.height,
+                        Text(FormatUtils.formatDate(widget.product.createAt!))
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hạn sử dụng',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Gap.k4.height,
+                        Text(FormatUtils.formatDate(widget.product.expiredAt!))
+                      ],
+                    )
+                  ],
                 ),
                 Gap.kSection.height,
 
@@ -139,4 +175,3 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 }
-

@@ -20,6 +20,7 @@ import 'package:appetit/screens/OrdersWaitPaymentScreen.dart';
 import 'package:appetit/screens/ProductsScreen.dart';
 import 'package:appetit/screens/UpdateBranchScreen.dart';
 import 'package:appetit/screens/UpdateCampaignScreen.dart';
+import 'package:appetit/screens/UpdateProductScreen.dart';
 import 'package:appetit/screens/WalletScreen.dart';
 import 'package:appetit/screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,8 @@ PageRoute? generateRoute(RouteSettings settings) {
                   branch: settings.arguments as Branch,
                 ),
               ));
+    case UpdateProductScreen.routeName:
+      return MaterialPageRoute(builder: (_) => BlocProvider<UpdateProductCubit>(create: (context) => UpdateProductCubit(), child: UpdateProductScreen(product: settings.arguments as Product)));
     case WalletScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [
@@ -132,8 +135,8 @@ PageRoute? generateRoute(RouteSettings settings) {
     case ProductDetailScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => ProductDetailScreen(
-            product: settings.arguments as Product,
-          ));
+                product: settings.arguments as Product,
+              ));
     default:
   }
   return null;

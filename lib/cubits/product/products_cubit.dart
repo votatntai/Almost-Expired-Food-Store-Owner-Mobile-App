@@ -1,5 +1,6 @@
 import 'package:appetit/cubits/product/products_state.dart';
 import 'package:appetit/domains/models/product/createProduct.dart';
+import 'package:appetit/domains/models/product/updateProduct.dart';
 import 'package:appetit/utils/get_it.dart';
 import 'package:bloc/bloc.dart';
 
@@ -70,6 +71,22 @@ class CreateProductCubit extends Cubit<CreateProductState> {
       emit(CreateProductSuccessState(statusCode: statusCode));
     } on Exception catch (e) {
       emit(CreateProductFailedState(msg: e.toString()));
+    }
+  }
+}
+
+//Update product
+class UpdateProductCubit extends Cubit<UpdateProductState> {
+  final ProductsRepo _productsRepo = ProductsRepo();
+  UpdateProductCubit():super(UpdateProductState());
+
+  Future<void> updateProduct({required UpdateProduct product}) async {
+    try {
+      emit(UpdateProductLoadingState());
+      var statusCode = await _productsRepo.updateProduct(product: product);
+      emit(UpdateProductSuccessState(statusCode: statusCode));
+    } on Exception catch (e) {
+      emit(UpdateProductFailedState(msg: e.toString()));
     }
   }
 }
