@@ -53,11 +53,11 @@ class _AddProductToCampaignScreenState
             icon: Icon(Icons.filter_alt_outlined),
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: Text('Gần hết hạn'),
+                child: Text('Hạn tăng dần'),
                 value: 'expiredAsc',
               ),
               PopupMenuItem(
-                child: Text('Hạn còn dài'),
+                child: Text('Hạn giảm dần'),
                 value: 'expiredDesc',
               ),
             ],
