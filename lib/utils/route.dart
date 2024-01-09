@@ -6,6 +6,7 @@ import 'package:appetit/cubits/wallet/wallet_cubit.dart';
 import 'package:appetit/domains/models/branchs.dart';
 import 'package:appetit/domains/models/campaign/campaigns.dart';
 import 'package:appetit/domains/repositories/stores_repo.dart';
+import 'package:appetit/screens/AddProductToCampaignScreen.dart';
 import 'package:appetit/screens/BranchsScreen.dart';
 import 'package:appetit/screens/CampaignScreen.dart';
 import 'package:appetit/screens/CreateBranchScreen.dart';
@@ -41,39 +42,59 @@ PageRoute? generateRoute(RouteSettings settings) {
     case WelcomeScreen.routeName:
       return MaterialPageRoute(builder: (_) => WelcomeScreen());
     case CreateStoreScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<CreateStoreCubit>(create: (context) => CreateStoreCubit(), child: CreateStoreScreen()));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<CreateStoreCubit>(
+              create: (context) => CreateStoreCubit(),
+              child: CreateStoreScreen()));
     case DashboardScreen.routeName:
       return MaterialPageRoute(builder: (_) => DashboardScreen());
     case BranchsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<BranchsCubit>(create: (context) => BranchsCubit(), child: BranchsScreen()));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<BranchsCubit>(
+              create: (context) => BranchsCubit(), child: BranchsScreen()));
     case CreateBranchScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<CreateBranchCubit>(create: (context) => CreateBranchCubit(), child: CreateBranchScreen()));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<CreateBranchCubit>(
+              create: (context) => CreateBranchCubit(),
+              child: CreateBranchScreen()));
     case CreateCampaignScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [
-                BlocProvider<CreateCampaignCubit>(create: (context) => CreateCampaignCubit()),
+                BlocProvider<CreateCampaignCubit>(
+                    create: (context) => CreateCampaignCubit()),
                 BlocProvider<BranchsCubit>(
                   create: (context) => BranchsCubit(),
                 )
               ], child: CreateCampaignScreen()));
     case CampaignScreen.routeName:
-      Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
+      Map<String, dynamic> arguments =
+          settings.arguments as Map<String, dynamic>;
       var campaignId = arguments['campaignId'] as String;
       var campaign = arguments['campaign'] as Campaign;
       return MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-              providers: [BlocProvider<DeleteCampaignCubit>(create: (context) => DeleteCampaignCubit()), BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(campaignId: campaignId))],
-              child: CampaignScreen(campaign: campaign)));
+          builder: (_) => MultiBlocProvider(providers: [
+                BlocProvider<DeleteCampaignCubit>(
+                    create: (context) => DeleteCampaignCubit()),
+                BlocProvider<ProductsCubit>(
+                    create: (context) => ProductsCubit(campaignId: campaignId))
+              ], child: CampaignScreen(campaign: campaign)));
     case CampaignsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit(), child: CampaignsScreen()));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<CampaignsCubit>(
+              create: (context) => CampaignsCubit(), child: CampaignsScreen()));
     case ProductsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(storeId: StoresRepo.store.id), child: ProductsScreen()));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<ProductsCubit>(
+              create: (context) => ProductsCubit(storeId: StoresRepo.store.id),
+              child: ProductsScreen()));
     case CreateProductScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [
-                BlocProvider<CampaignsCubit>(create: (context) => CampaignsCubit()),
+                BlocProvider<CampaignsCubit>(
+                    create: (context) => CampaignsCubit()),
                 BlocProvider<StoresCubit>(create: (context) => StoresCubit()),
-                BlocProvider<CreateProductCubit>(create: (context) => CreateProductCubit())
+                BlocProvider<CreateProductCubit>(
+                    create: (context) => CreateProductCubit())
               ], child: CreateProductScreen()));
     case OrdersSoldScreen.routeName:
       return MaterialPageRoute(
@@ -94,7 +115,10 @@ PageRoute? generateRoute(RouteSettings settings) {
                 child: OrdersWaitPaymentScreen(),
               ));
     case OrdersCanceledScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<OrdersCubit>(create: (context) => OrdersCubit(), child: OrdersCanceledScreen()));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<OrdersCubit>(
+              create: (context) => OrdersCubit(),
+              child: OrdersCanceledScreen()));
     case OrderDetailsScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => OrderDetailsScreen(
@@ -125,21 +149,37 @@ PageRoute? generateRoute(RouteSettings settings) {
                 ),
               ));
     case UpdateProductScreen.routeName:
-      return MaterialPageRoute(builder: (_) => BlocProvider<UpdateProductCubit>(create: (context) => UpdateProductCubit(), child: UpdateProductScreen(product: settings.arguments as Product)));
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<UpdateProductCubit>(
+              create: (context) => UpdateProductCubit(),
+              child:
+                  UpdateProductScreen(product: settings.arguments as Product)));
     case WalletScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(providers: [
-                BlocProvider<WalletCubit>(create: (context) => WalletCubit(storeId: StoresRepo.store.id!)),
-                BlocProvider<UpdateWalletCubit>(create: (context) => UpdateWalletCubit()),
-                BlocProvider<WithdrawRequestCubit>(create: (context) => WithdrawRequestCubit())
+                BlocProvider<WalletCubit>(
+                    create: (context) =>
+                        WalletCubit(storeId: StoresRepo.store.id!)),
+                BlocProvider<UpdateWalletCubit>(
+                    create: (context) => UpdateWalletCubit()),
+                BlocProvider<WithdrawRequestCubit>(
+                    create: (context) => WithdrawRequestCubit())
               ], child: WalletScreen()));
     case ProductDetailScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => ProductDetailScreen(
                 product: settings.arguments as Product,
               ));
-              case UpdateStoreScreen.routeName:
-              return MaterialPageRoute(builder: (_) => BlocProvider<UpdateStoreCubit>(create: (context) => UpdateStoreCubit(), child: UpdateStoreScreen()));
+    case UpdateStoreScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<UpdateStoreCubit>(
+              create: (context) => UpdateStoreCubit(),
+              child: UpdateStoreScreen()));
+    case AddProductToCampaignScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => BlocProvider<AvailableProductsCubit>(
+              create: (context) => AvailableProductsCubit(),
+              child: AddProductToCampaignScreen(campaign: settings.arguments as Campaign,)));
     default:
   }
   return null;

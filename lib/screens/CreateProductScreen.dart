@@ -511,12 +511,13 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
-                    child: (_productName.text != '' && _productDescription.text != '' && _imageFile != null && _isValidProPrice)
+                    child: (_productName.text != '' && _productDescription.text != '' && _imageFile != null && _isValidProPrice && _expiredAtController.text != '' && _createAtController.text != '')
                         ? ElevatedButton(
                             onPressed: () async {
                               await createProductCubit.createProduct(
                                   product: CreateProduct(
                                 campaignId: _selectedCampaign.id.toString(),
+                                storeId: StoresRepo.store.id!,
                                 name: _productName.text,
                                 categoriesId: _selectedCategories,
                                 description: _productDescription.text,

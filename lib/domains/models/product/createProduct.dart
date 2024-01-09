@@ -6,6 +6,7 @@ import 'package:appetit/domains/models/categories.dart';
 class CreateProduct {
   String name;
   String campaignId;
+  String storeId;
   List<Category> categoriesId;
   String description;
   int price;
@@ -19,6 +20,7 @@ class CreateProduct {
   CreateProduct(
       {required this.name,
       required this.campaignId,
+      required this.storeId,
       required this.categoriesId,
       required this.description,
       required this.price,

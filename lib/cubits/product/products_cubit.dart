@@ -48,15 +48,48 @@ class ProductsCubit extends Cubit<ProductsState> {
     getProducts();
   }
 
-  // Future<void> getProductsByCampaignId(String campaignId) async {
-  //   try {
-  //     emit(ProductsLoadingState());
-  //     final products = await _productsRepo.getProductsByCampaignId(campaignId);
-  //     emit(ProductsSuccessState(products: products));
-  //   } on Exception catch (e) {
-  //     emit(ProductsFailedState(msg: e.toString()));
-  //   }
-  // }
+}
+class AvailableProductsCubit extends Cubit<AvailableProductsState> {
+  final ProductsRepo _productsRepo = getIt<ProductsRepo>();
+
+  AvailableProductsCubit(
+      {String? categoryId,
+      String? campaignId,
+      String? storeId,
+      String? name,
+      bool? isPriceHighToLow,
+      bool? isPriceLowToHight})
+      : super(AvailableProductsState()) {
+    getProducts(
+        categoryId: categoryId,
+        campaignId: campaignId,
+        storeId: storeId,
+        name: name,
+        isPriceHighToLow: isPriceHighToLow,
+        isPriceLowToHight: isPriceLowToHight);
+  }
+
+  Future<void> getProducts(
+      {String? categoryId,
+      String? campaignId,
+      String? storeId,
+      String? name,
+      bool? isPriceHighToLow,
+      bool? isPriceLowToHight}) async {
+    try {
+      emit(AvailableProductsLoadingState());
+      final products = await _productsRepo.getAvailableProducts(
+          categoryId, campaignId, storeId, name, isPriceHighToLow, isPriceLowToHight);
+      emit(AvailableProductsSuccessState(products: products));
+    } on Exception catch (e) {
+      emit(AvailableProductsFailedState(msg: e.toString()));
+    }
+  }
+
+  void refresh(){
+    emit(AvailableProductsLoadingState());
+    getProducts();
+  }
 }
 
 //Create product

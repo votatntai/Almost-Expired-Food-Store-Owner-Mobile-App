@@ -4,12 +4,14 @@ import 'package:appetit/cubits/campaign/campaigns_state.dart';
 import 'package:appetit/cubits/product/products_cubit.dart';
 import 'package:appetit/cubits/product/products_state.dart';
 import 'package:appetit/domains/models/campaign/campaigns.dart';
+import 'package:appetit/screens/AddProductToCampaignScreen.dart';
 import 'package:appetit/screens/UpdateCampaignScreen.dart';
 import 'package:appetit/utils/Colors.dart';
 import 'package:appetit/widgets/AppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import '../utils/gap.dart';
 import 'CampaignsScreen.dart';
@@ -23,6 +25,18 @@ class CampaignScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deleteCampaignCubit = BlocProvider.of<DeleteCampaignCubit>(context);
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.orange.shade600,
+        onPressed: () {
+          Navigator.pushNamed(context, AddProductToCampaignScreen.routeName, arguments: campaign);
+        },
+        label: Text('Thêm sản phẩm', style: TextStyle(color: white),),
+        icon: Icon(
+          Icons.add_outlined,
+          color: white,
+        ),
+      ),
       backgroundColor: appLayout_background,
         appBar: MyAppBar(
           title: campaign.name,

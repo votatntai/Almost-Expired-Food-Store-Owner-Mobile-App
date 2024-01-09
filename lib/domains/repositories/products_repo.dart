@@ -1,4 +1,5 @@
 import 'package:appetit/domains/models/product/createProduct.dart';
+import 'package:appetit/domains/repositories/stores_repo.dart';
 import 'package:appetit/utils/messages.dart';
 import 'package:dio/dio.dart';
 
@@ -6,13 +7,49 @@ import '../../utils/get_it.dart';
 import '../models/product/products.dart';
 import '../models/product/updateProduct.dart';
 
-
 class ProductsRepo {
-final Dio apiClient = getIt.get<Dio>();
-  Future<Products> getProducts(String? categoryId, String? campaignId, String? storeId, String? name, bool? isPriceHighToLow, bool? isPriceLowToHight) async {
+  final Dio apiClient = getIt.get<Dio>();
+  Future<Products> getProducts(
+    String? categoryId,
+    String? campaignId,
+    String? storeId,
+    String? name,
+    bool? isPriceHighToLow,
+    bool? isPriceLowToHight,
+  ) async {
     try {
-      var res = await apiClient.get('/api/products',
-          queryParameters: {'categoryId': categoryId, 'campaignId': campaignId, 'storeId': storeId, 'name': name, 'isPriceHighToLow': isPriceHighToLow, 'isPriceLowToHight': isPriceLowToHight});
+      var res = await apiClient.get('/api/products', queryParameters: {
+        'categoryId': categoryId,
+        'campaignId': campaignId,
+        'storeId': storeId,
+        'name': name,
+        'isPriceHighToLow': isPriceHighToLow,
+        'isPriceLowToHight': isPriceLowToHight
+      });
+      return Products.fromJson(res.data);
+    } on DioException {
+      throw Exception(msg_server_error);
+    }
+  }
+
+  Future<Products> getAvailableProducts(
+    String? categoryId,
+    String? campaignId,
+    String? storeId,
+    String? name,
+    bool? isPriceHighToLow,
+    bool? isPriceLowToHight,
+  ) async {
+    try {
+      var res =
+          await apiClient.get('/api/products/stores', queryParameters: {
+        'categoryId': categoryId,
+        'campaignId': campaignId,
+        'storeId': storeId,
+        'name': name,
+        'isPriceHighToLow': isPriceHighToLow,
+        'isPriceLowToHight': isPriceLowToHight
+      });
       return Products.fromJson(res.data);
     } on DioException {
       throw Exception(msg_server_error);
@@ -22,10 +59,15 @@ final Dio apiClient = getIt.get<Dio>();
   Future<int> createProduct(CreateProduct product) async {
     try {
       FormData formData = FormData();
-
+      print(StoresRepo.store.id);
       formData.fields.addAll([
         MapEntry('name', product.name),
-        MapEntry('campaignId', product.campaignId.toString()),
+        MapEntry(
+            'campaignId',
+            product.campaignId.toString() != 'null'
+                ? product.campaignId.toString()
+                : ''),
+        MapEntry('storeId', product.storeId.toString()),
         MapEntry('description', product.description),
         MapEntry('price', product.price.toString()),
         MapEntry('promotionalPrice', product.promotionalPrice.toString()),
@@ -37,7 +79,8 @@ final Dio apiClient = getIt.get<Dio>();
 
       // Iterate through category IDs and add them to the form data
       for (int i = 0; i < product.categoriesId.length; i++) {
-        formData.fields.add(MapEntry('productCategories[$i][categoryId]', product.categoriesId[i].id.toString()));
+        formData.fields.add(MapEntry('productCategories[$i][categoryId]',
+            product.categoriesId[i].id.toString()));
       }
 
       formData.files.add(MapEntry(
@@ -67,11 +110,12 @@ final Dio apiClient = getIt.get<Dio>();
         'expiredAt': product.expiredAt,
         'createAt': product.createAt,
         'status': product.status,
-        'quantity': product.quantity
+        'quantity': product.quantity,
+        'campaignId' : product.campaignId
       });
       return res.statusCode!;
     } on DioException catch (e) {
-      print('Exception at update product: ' + e.response!.data);
+      print('Exception at update product: ' + e.response!.data.toString());
       throw Exception(msg_server_error);
     }
   }

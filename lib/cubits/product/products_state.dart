@@ -14,6 +14,21 @@ class ProductsSuccessState extends ProductsState {
   ProductsSuccessState({required this.products});
 }
 
+// Available products
+class AvailableProductsState {}
+
+class AvailableProductsLoadingState extends AvailableProductsState {}
+
+class AvailableProductsFailedState extends AvailableProductsState {
+  final String msg;
+  AvailableProductsFailedState({required this.msg});
+}
+
+class AvailableProductsSuccessState extends AvailableProductsState {
+  final Products products;
+  AvailableProductsSuccessState({required this.products});
+}
+
 //Create product
 class CreateProductState {}
 

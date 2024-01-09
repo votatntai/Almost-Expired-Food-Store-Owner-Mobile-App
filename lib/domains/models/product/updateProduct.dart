@@ -9,6 +9,7 @@ class UpdateProduct {
   String? status;
   int? quantity;
   int? sold;
+  String? campaignId;
 
   UpdateProduct(
       { this.id,
@@ -20,5 +21,6 @@ class UpdateProduct {
        this.expiredAt,
        this.status,
        this.quantity,
-       this.sold});
+       this.sold,
+       this.campaignId});
 }
