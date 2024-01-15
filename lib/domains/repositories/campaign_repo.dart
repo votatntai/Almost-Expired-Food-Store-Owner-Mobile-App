@@ -1,4 +1,3 @@
-
 import 'package:appetit/domains/models/campaign/updateCampaign.dart';
 import 'package:appetit/utils/get_it.dart';
 import 'package:appetit/utils/messages.dart';
@@ -9,9 +8,15 @@ import '../models/campaign/createCampaign.dart';
 
 class CampaignRepo {
   final Dio apiClient = getIt.get<Dio>();
-  Future<Campaigns> getCampaignsList(String? storeOwnerId, String? branchId, String? storeId, String? name) async {
+  Future<Campaigns> getCampaignsList(String? storeOwnerId, String? branchId,
+      String? storeId, String? name) async {
     try {
-      var res = await apiClient.get('/api/campaigns', queryParameters: {'storeOwnerId': storeOwnerId, 'branchId': branchId, 'storeId': storeId, 'name': name});
+      var res = await apiClient.get('/api/campaigns', queryParameters: {
+        'storeOwnerId': storeOwnerId,
+        'branchId': branchId,
+        'storeId': storeId,
+        'name': name
+      });
       return Campaigns.fromJson(res.data);
     } on DioException {
       throw Exception(msg_server_error);
@@ -30,10 +35,17 @@ class CampaignRepo {
         'startTime': campaign.startTime,
         'endTime': campaign.endTime
       });
-      apiClient.options.headers['Content-Type'] = 'multipart/form-data';
-      var res = await apiClient.post('/api/campaigns',
-          data: formData
-          );
+      // apiClient.options.headers['Content-Type'] = 'multipart/form-data';
+      var res = await apiClient.post(
+        '/api/campaigns',
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            // Bạn có thể thêm các header khác nếu cần
+          },
+        ),
+      );
       return res.statusCode!;
     } on DioException catch (e) {
       print(e.response);
@@ -44,9 +56,15 @@ class CampaignRepo {
     }
   }
 
-  Future<int> updateCampaign({required String campaignId, required UpdateCampaign campaign}) async {
+  Future<int> updateCampaign(
+      {required String campaignId, required UpdateCampaign campaign}) async {
     try {
-      var res = await apiClient.put('/api/campaigns/$campaignId', data: {'startTime' : campaign.startTime, 'endTime' : campaign.endTime, 'name' : campaign.name, 'status' : campaign.status});
+      var res = await apiClient.put('/api/campaigns/$campaignId', data: {
+        'startTime': campaign.startTime,
+        'endTime': campaign.endTime,
+        'name': campaign.name,
+        'status': campaign.status
+      });
       return res.statusCode!;
     } on DioException catch (e) {
       print(e);

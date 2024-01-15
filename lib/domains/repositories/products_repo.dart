@@ -41,8 +41,7 @@ class ProductsRepo {
     bool? isPriceLowToHight,
   ) async {
     try {
-      var res =
-          await apiClient.get('/api/products/stores', queryParameters: {
+      var res = await apiClient.get('/api/products/stores', queryParameters: {
         'categoryId': categoryId,
         'campaignId': campaignId,
         'storeId': storeId,
@@ -59,7 +58,6 @@ class ProductsRepo {
   Future<int> createProduct(CreateProduct product) async {
     try {
       FormData formData = FormData();
-      print(StoresRepo.store.id);
       formData.fields.addAll([
         MapEntry('name', product.name),
         MapEntry(
@@ -90,8 +88,17 @@ class ProductsRepo {
           filename: '${product.name}_product_thumbnail',
         ),
       ));
-      apiClient.options.headers['Content-Type'] = 'multipart/form-data';
-      var res = await apiClient.post('/api/products', data: formData);
+      // apiClient.options.headers['Content-Type'] = 'multipart/form-data';
+      var res = await apiClient.post(
+        '/api/products',
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            // Bạn có thể thêm các header khác nếu cần
+          },
+        ),
+      );
       return res.statusCode!;
     } on DioException catch (e) {
       print(e.toString());
@@ -111,7 +118,7 @@ class ProductsRepo {
         'createAt': product.createAt,
         'status': product.status,
         'quantity': product.quantity,
-        'campaignId' : product.campaignId
+        'campaignId': product.campaignId
       });
       return res.statusCode!;
     } on DioException catch (e) {

@@ -33,17 +33,17 @@ class _AddProductToCampaignScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appLayout_background,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.small(
-        backgroundColor: Colors.orange.shade600,
-        onPressed: () {
-          Navigator.pushNamed(context, CreateProductScreen.routeName);
-        },
-        child: Icon(
-          Icons.add_outlined,
-          color: white,
-        ),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton.small(
+      //   backgroundColor: Colors.orange.shade600,
+      //   onPressed: () {
+      //     Navigator.pushNamed(context, CreateProductScreen.routeName);
+      //   },
+      //   child: Icon(
+      //     Icons.add_outlined,
+      //     color: white,
+      //   ),
+      // ),
       appBar: MyAppBar(
         title: 'Sản phẩm',
         routeName: CampaignScreen.routeName,

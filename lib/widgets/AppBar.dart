@@ -20,7 +20,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () {
-          routeName == null ? Navigator.pop(context) : Navigator.pushReplacementNamed(context, routeName!, arguments: arguments);
+          routeName == null ? Navigator.pop(context) : {Navigator.pop(context), Navigator.pushReplacementNamed(context, routeName!, arguments: arguments)};
         },
       ),
       actions: actions,
